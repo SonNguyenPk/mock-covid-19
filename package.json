@@ -35,13 +35,7 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ],
-    "rules": {
-      "closingSlash": "never",
-      "beforeSelfClosing": "always",
-      "afterOpening": "never",
-      "beforeClosing": "allow"
-    }
+    ]
   },
   "browserslist": {
     "production": [
