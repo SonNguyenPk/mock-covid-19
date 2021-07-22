@@ -1,9 +1,9 @@
-import transitions from '@material-ui/core/styles/transitions';
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import translationEn from './Locales/en/translation.json';
-import translationVn from './Locales/en/translation.json';
-
+import { initReactI18next } from "react-i18next";
+import {
+  default as translationEn,
+  default as translationVn,
+} from "./Locales/en/translation.json";
+import i18n from "i18next";
 const resources = {
   en: {
     translation: translationEn,
@@ -13,15 +13,13 @@ const resources = {
   },
 };
 
-i18n
-  .use(initReactI18next) //
-  .init({
-    resources,
-    lng: 'en',
+i18n.use(initReactI18next).init({
+  resources,
+  lng: "en",
 
-    interpolation: {
-      escapeValue: false,
-    },
-  });
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
 export default i18n;
