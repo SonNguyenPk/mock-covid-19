@@ -4,42 +4,45 @@ import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Brightness7OutlinedIcon from '@material-ui/icons/Brightness7Outlined';
 import 'App.scss';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function App() {
-  // const [isDarkTheme, setIsDarkTheme] = useState(false);
-  // const modeThemeType = isDarkTheme ? 'dark' : 'light';
-  // const darkTheme = createTheme({
-  //   palette: {
-  //     type: modeThemeType,
-  //   },
-  // });
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const modeThemeType = isDarkTheme ? 'dark' : 'light';
+  const darkTheme = createTheme({
+    palette: {
+      type: modeThemeType,
+    },
+  });
 
-  // const handleChangeModeTheme = () => {
-  //   if (isDarkTheme) {
-  //     setIsDarkTheme(false);
-  //   }
-  //   if (!isDarkTheme) {
-  //     setIsDarkTheme(true);
-  //   }
-  // };
+  const handleChangeModeTheme = () => {
+    if (isDarkTheme) {
+      setIsDarkTheme(false);
+    }
+    if (!isDarkTheme) {
+      setIsDarkTheme(true);
+    }
+  };
 
   return (
-    <div></div>
-    // <ThemeProvider theme={darkTheme}>
-    //   <CssBaseline>
-    //     <Box className="app" width="100vw" height="100vh">
-    //       <Switch
-    //         icon={<Brightness7OutlinedIcon />}
-    //         checkedIcon={<Brightness4Icon />}
-    //         onChange={handleChangeModeTheme}
-    //         checked={isDarkTheme}
-    //       />
-    //       <Button variant="contained" color="primary">
-    //         Dark/light
-    //       </Button>
-    //     </Box>
-    //   </CssBaseline>
-    // </ThemeProvider>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline>
+        <Box className="app" width="100vw" height="100vh">
+          <Switch
+            icon={<Brightness7OutlinedIcon />}
+            checkedIcon={<Brightness4Icon />}
+            onChange={handleChangeModeTheme}
+            checked={isDarkTheme}
+          />
+          <Button variant="contained" color="primary">
+            Login
+          </Button>
+          <Button variant="contained" color="primary">
+            Register
+          </Button>
+        </Box>
+      </CssBaseline>
+    </ThemeProvider>
   );
 }
 

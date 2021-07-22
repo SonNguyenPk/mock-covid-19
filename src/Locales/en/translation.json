@@ -1,0 +1,9 @@
+{
+  "header": {
+      "Login": "Login",
+      "Register": "Register"
+
+  },
+  "home": {},
+  "homeDetail": {}
+}
