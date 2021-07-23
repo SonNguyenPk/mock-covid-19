@@ -3,7 +3,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
-import { createTheme, makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
@@ -236,9 +236,11 @@ export default function MainLayout(props) {
                 {t("common.logout")}
               </Button>
             ) : (
-              <Button variant="contained" color="primary" size="small">
-                {t("common.login")}
-              </Button>
+              <Link to={router.login}>
+                <Button variant="contained" color="primary" size="small">
+                  {t("common.login")}
+                </Button>
+              </Link>
             )}
           </Toolbar>
         </Container>
