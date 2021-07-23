@@ -15,7 +15,10 @@ import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import { router } from "Constants/constants";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { globalActions } from "Redux/rootAction";
 import { checkLogin } from "Utilise/utilise";
 import NavigationBar from "./NavigationBar";
 import SelectionLanguage from "./SelectionLanguage";
@@ -148,24 +151,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MainLayout(props) {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const modeThemeType = isDarkTheme ? "dark" : "light";
-  const darkTheme = createTheme({
-    palette: {
-      type: modeThemeType,
-    },
-  });
+  const [open, setOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+  const globalState = useSelector((state) => state.global);
+  const dispatch = useDispatch();
 
   const handleChangeModeTheme = () => {
-    if (isDarkTheme) {
-      setIsDarkTheme(false);
+    const themeMode = globalState.themeMode;
+    if (themeMode === "dark") {
+      const action = globalActions.changeThemeMode({ themeMode: "light" });
+      dispatch(action);
     }
-    if (!isDarkTheme) {
-      setIsDarkTheme(true);
+    if (themeMode === "light") {
+      const action = globalActions.changeThemeMode({ themeMode: "dark" });
+      dispatch(action);
     }
+  };
+
+  const handleChangeLanguage = (value) => {
+    // i18n.changeLanguage(value);
+    const action = globalActions.changeLanguage({ language: value });
+    dispatch(action);
   };
 
   const handleDrawerOpen = () => {
@@ -175,6 +181,9 @@ export default function MainLayout(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <div className={classes.mainAppBar}>
@@ -209,7 +218,10 @@ export default function MainLayout(props) {
 
             <div className={classes.grow}></div>
             <div className={classes.appBarSelectionLanguage}>
-              <SelectionLanguage />
+              <SelectionLanguage
+                onChangeLanguage={handleChangeLanguage}
+                currentLanguage={globalState.language}
+              />
             </div>
             {/* Dark mode button */}
             <Switch
@@ -217,15 +229,15 @@ export default function MainLayout(props) {
               icon={<Brightness7OutlinedIcon />}
               checkedIcon={<Brightness4Icon />}
               onChange={handleChangeModeTheme}
-              checked={isDarkTheme}
+              checked={globalState.themeMode === "dark" ? true : false}
             />
             {checkLogin() ? (
               <Button variant="contained" color="primary" size="small">
-                Log out
+                {t("common.logout")}
               </Button>
             ) : (
               <Button variant="contained" color="primary" size="small">
-                Log in
+                {t("common.login")}
               </Button>
             )}
           </Toolbar>
@@ -255,7 +267,10 @@ export default function MainLayout(props) {
           </Box>
           <Divider />
           <Box mt="1rem">
-            <SelectionLanguage />
+            <SelectionLanguage
+              onChangeLanguage={handleChangeLanguage}
+              currentLanguage={globalState.language}
+            />
           </Box>
         </Container>
       </Drawer>
