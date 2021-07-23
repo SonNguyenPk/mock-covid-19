@@ -1,33 +1,36 @@
-import { Box, Button, Container, Switch } from "@material-ui/core";
-import AppBar from "@material-ui/core/AppBar";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-import { createTheme, makeStyles, useTheme } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Brightness4Icon from "@material-ui/icons/Brightness4";
-import Brightness7OutlinedIcon from "@material-ui/icons/Brightness7Outlined";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import HomeIcon from "@material-ui/icons/Home";
-import MenuIcon from "@material-ui/icons/Menu";
-import clsx from "clsx";
-import { router } from "Constants/constants";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { checkLogin } from "Utilise/utilise";
-import NavigationBar from "./NavigationBar";
-import SelectionLanguage from "./SelectionLanguage";
+import { Box, Button, Container, Switch } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import { createTheme, makeStyles, useTheme } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
+import Brightness7OutlinedIcon from '@material-ui/icons/Brightness7Outlined';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import HomeIcon from '@material-ui/icons/Home';
+import MenuIcon from '@material-ui/icons/Menu';
+import clsx from 'clsx';
+import { router } from 'Constants/constants';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { globalActions } from 'Redux/rootAction';
+import { checkLogin } from 'Utilise/utilise';
+import NavigationBar from './NavigationBar';
+import SelectionLanguage from './SelectionLanguage';
 
-const drawerWidth = "100vw";
+const drawerWidth = '100vw';
 
 const useStyles = makeStyles((theme) => ({
   mainAppBar: {
-    display: "flex",
+    display: 'flex',
   },
   appBar: {
-    transition: theme.transitions.create(["margin", "width"], {
+    transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
@@ -35,43 +38,43 @@ const useStyles = makeStyles((theme) => ({
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
+    transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   appBarMenuButton: {
-    display: "flex",
+    display: 'flex',
     // marginLeft: "-21px",
   },
   appBarHomeButton: {
-    color: "white",
-    marginLeft: "-12px",
+    color: 'white',
+    marginLeft: '-12px',
   },
   appBarTitle: {
-    display: "none",
+    display: 'none',
   },
   appBarNavigation: {
-    display: "none",
+    display: 'none',
   },
   grow: {
-    flex: "1 0 auto",
+    flex: '1 0 auto',
   },
   appBarSelectionLanguage: {
-    display: "none",
+    display: 'none',
   },
 
   appBarDarkModeButton: {
-    height: "40px",
-    margin: "0  8px",
+    height: '40px',
+    margin: '0  8px',
   },
 
   sliderBar: {
-    display: "flex",
+    display: 'flex',
   },
 
   drawer: {
-    width: "100vw",
+    width: '100vw',
     flexShrink: 0,
   },
 
@@ -79,67 +82,67 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
   },
   drawerHeader: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: "flex-start",
-    "& h6": {
-      flex: "1 0 auto",
+    justifyContent: 'flex-start',
+    '& h6': {
+      flex: '1 0 auto',
     },
   },
   navigationBarMobile: {
-    "&>*": {
-      flexFlow: "column nowrap",
-      alignItems: "flex-start",
-      "&>*": {
-        width: "100%",
+    '&>*': {
+      flexFlow: 'column nowrap',
+      alignItems: 'flex-start',
+      '&>*': {
+        width: '100%',
       },
     },
   },
 
   content: {
     flexGrow: 1,
-    transition: theme.transitions.create("margin", {
+    transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: "-100%",
+    marginLeft: '-100%',
   },
   contentShift: {
-    transition: theme.transitions.create("margin", {
+    transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
   },
   // responsive
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up('sm')]: {
     appBarMenuButton: {
-      display: "none",
+      display: 'none',
     },
     appBarTitle: {
-      display: "flex",
+      display: 'flex',
     },
     grow: {
-      display: "none",
+      display: 'none',
     },
     appBarSelectionLanguage: {
-      display: "flex",
+      display: 'flex',
     },
     appBarNavigation: {
-      display: "flex",
-      flex: "1 0 auto",
-      "&>*": {
-        justifyContent: "center",
-        "& button": {
-          color: "white",
+      display: 'flex',
+      flex: '1 0 auto',
+      '&>*': {
+        justifyContent: 'center',
+        '& button': {
+          color: 'white',
         },
       },
     },
     drawer: {
-      display: "none",
+      display: 'none',
     },
     content: {
       marginLeft: 0,
@@ -148,24 +151,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MainLayout(props) {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const modeThemeType = isDarkTheme ? "dark" : "light";
-  const darkTheme = createTheme({
-    palette: {
-      type: modeThemeType,
-    },
-  });
+  const [open, setOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+  const globalState = useSelector((state) => state.global);
+  const dispatch = useDispatch();
 
   const handleChangeModeTheme = () => {
-    if (isDarkTheme) {
-      setIsDarkTheme(false);
+    const themeMode = globalState.themeMode;
+    if (themeMode === 'dark') {
+      const action = globalActions.changeThemeMode({ themeMode: 'light' });
+      dispatch(action);
     }
-    if (!isDarkTheme) {
-      setIsDarkTheme(true);
+    if (themeMode === 'light') {
+      const action = globalActions.changeThemeMode({ themeMode: 'dark' });
+      dispatch(action);
     }
+  };
+
+  const handleChangeLanguage = (value) => {
+    // i18n.changeLanguage(value);
+    const action = globalActions.changeLanguage({ language: value });
+    dispatch(action);
   };
 
   const handleDrawerOpen = () => {
@@ -175,6 +181,9 @@ export default function MainLayout(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <div className={classes.mainAppBar}>
@@ -209,7 +218,10 @@ export default function MainLayout(props) {
 
             <div className={classes.grow}></div>
             <div className={classes.appBarSelectionLanguage}>
-              <SelectionLanguage />
+              <SelectionLanguage
+                onChangeLanguage={handleChangeLanguage}
+                currentLanguage={globalState.language}
+              />
             </div>
             {/* Dark mode button */}
             <Switch
@@ -217,15 +229,15 @@ export default function MainLayout(props) {
               icon={<Brightness7OutlinedIcon />}
               checkedIcon={<Brightness4Icon />}
               onChange={handleChangeModeTheme}
-              checked={isDarkTheme}
+              checked={globalState.themeMode === 'dark' ? true : false}
             />
             {checkLogin() ? (
               <Button variant="contained" color="primary" size="small">
-                Log out
+                {t('common.logout')}
               </Button>
             ) : (
               <Button variant="contained" color="primary" size="small">
-                Log in
+                {t('common.login')}
               </Button>
             )}
           </Toolbar>
@@ -246,7 +258,7 @@ export default function MainLayout(props) {
               Covid-19
             </Typography>
             <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
           </div>
           <Divider />
@@ -255,7 +267,10 @@ export default function MainLayout(props) {
           </Box>
           <Divider />
           <Box mt="1rem">
-            <SelectionLanguage />
+            <SelectionLanguage
+              onChangeLanguage={handleChangeLanguage}
+              currentLanguage={globalState.language}
+            />
           </Box>
         </Container>
       </Drawer>
