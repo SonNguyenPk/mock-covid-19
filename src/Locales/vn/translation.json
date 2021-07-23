@@ -1,11 +1,11 @@
 {
-    "common": {
-        "login": "Đăng nhập",
-        "register": "Đăng ký",
-        "home":"Trang chủ",
-        "news":"Tin tức"
-    },
-    "home": {},
-    "homeDetail": {}
-  }
-  
+  "common": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "register": "Đăng ký",
+    "home": "Trang chủ",
+    "news": "Tin tức"
+  },
+  "home": {},
+  "homeDetail": {}
+}
