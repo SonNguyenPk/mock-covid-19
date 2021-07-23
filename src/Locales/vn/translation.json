@@ -1,7 +1,9 @@
 {
-    "header": {
-        "Login": "Đăng nhập",
-        "Register": "Đăng ký"
+    "common": {
+        "login": "Đăng nhập",
+        "register": "Đăng ký",
+        "home":"Trang chủ",
+        "news":"Tin tức"
     },
     "home": {},
     "homeDetail": {}
