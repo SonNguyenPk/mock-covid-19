@@ -1,10 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
+import MainLayout from "Components/Layouts";
 
 HomePage.propTypes = {};
 
 function HomePage(props) {
-  return <div>This is dash board of home</div>;
+  return (
+    <MainLayout>
+      <div>This is dash board of home</div>;
+    </MainLayout>
+  );
 }
 
 export default HomePage;

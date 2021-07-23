@@ -6,3 +6,7 @@ export const router = {
   news: "/news",
   newsDetail: "/news/detail",
 };
+export const languageList = {
+  vietNam: "vn",
+  english: "en",
+};

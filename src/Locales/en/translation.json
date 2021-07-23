@@ -1,7 +1,9 @@
 {
-  "header": {
-      "Login": "Login",
-      "Register": "Register"
+  "common": {
+      "login": "Login",
+      "register": "Register",
+      "home":"Home",
+      "news":"News"
 
   },
   "home": {},
