@@ -282,7 +282,7 @@ export default function MainLayout(props) {
         })}
       >
         <div className={classes.drawerHeader} />
-        <Container>{props.children}</Container>
+        {props.children}
       </main>
     </div>
   );

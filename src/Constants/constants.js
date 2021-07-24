@@ -10,3 +10,9 @@ export const languageList = {
   vietNam: "vn",
   english: "en",
 };
+
+export const dataColorList = {
+  under1Million: "blue",
+  over1Million: "green",
+  over10Million: "red",
+};

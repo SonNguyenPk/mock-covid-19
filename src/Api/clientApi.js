@@ -1,5 +1,4 @@
 import axios from "axios";
-import { checkToken } from "src/Utilise/utilise";
 
 const axiosClient = axios.create({
   baseURL: "https://disease.sh/v3/covid-19",
@@ -20,7 +19,7 @@ axiosClient.interceptors.request.use(
 
 axiosClient.interceptors.response.use(
   function (response) {
-    return response;
+    return response.data;
   },
   function (error) {
     return Promise.reject(error);
