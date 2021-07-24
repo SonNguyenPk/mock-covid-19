@@ -1,14 +1,19 @@
+import axios from "axios";
 import axiosClient from "./clientApi";
 
-export const userApi = {
+export const covidApi = {
   getSummary(params) {
     const url = "/all";
     return axiosClient.get(url, { params });
   },
+  getByContinent(params) {
+    const url = "/continents";
+    return axiosClient.get(url, { params });
+  },
 
-  getAllCountry() {
-    const url = `/jhucsse`;
-    return axiosClient.get(url);
+  getAllCountry(params) {
+    const url = `/countries`;
+    return axiosClient.get(url, { params });
   },
   getByCountry(country, params) {
     const url = `/historical/${country}`;
