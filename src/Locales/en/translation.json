@@ -4,7 +4,16 @@
     "logout": "Log out",
     "register": "Register",
     "home": "Home",
-    "news": "News"
+    "news": "News",
+    "firstName":"First name",
+    "lastName":"Last name",
+    "password":"Password",
+    "email":"Email",
+    "login_remember":"Remember me",
+    "login_forgotPassword":"Forgot password?",
+    "login_haveAccount":"Don't have an account? Sign Up",
+    "signup_haveAccount":"Already have an account? Sign in",
+    "signup_checkBox":"I want to receive inspiration, marketing promotions and updates via email."
   },
   "home": {},
   "homeDetail": {}

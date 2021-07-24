@@ -10,8 +10,8 @@ import LoginPage from "Features/Login";
 import NewsDetail from "Features/News/Pages/NewsDetail";
 import NewsPage from "Features/News/Pages/NewsList";
 import RegisterPage from "Features/Register";
-import { Suspense, useEffect } from "react";
-import { I18nextProvider, useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 

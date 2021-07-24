@@ -1,6 +1,6 @@
 import { makeStyles, Select } from "@material-ui/core";
 import { languageList } from "Constants/constants";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -19,30 +19,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SelectionLanguage({ onChangeLanguage, currentLanguage }) {
+  const [language, setLanguage] = useState("en");
   const classes = useStyles();
   const handleChangeLanguage = (e) => {
     if (onChangeLanguage) {
-      console.log("language ", e.target.value);
+      setLanguage(e.target.value);
       onChangeLanguage(e.target.value);
     }
   };
   return (
-    <div>
-      <Select
-        native
-        className={classes.selectionLanguage}
-        onChange={handleChangeLanguage}
-        value={currentLanguage || "en"}
-        variant="standard"
-        inputProps={{
-          name: "age",
-          id: "filled-age-native-simple",
-        }}
-      >
-        <option value={languageList.vietNam}>Tiếng Việt</option>
-        <option value={languageList.english}>English</option>
-      </Select>
-    </div>
+    <Select
+      native
+      className={classes.selectionLanguage}
+      onChange={handleChangeLanguage}
+      value={currentLanguage || language}
+      variant="standard"
+      inputProps={{
+        name: "age",
+        id: "filled-age-native-simple",
+      }}
+    >
+      <option value={languageList.vietNam}>Tiếng Việt</option>
+      <option value={languageList.english}>English</option>
+    </Select>
   );
 }
 
