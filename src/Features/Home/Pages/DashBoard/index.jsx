@@ -1,14 +1,8 @@
-import { Grid } from "@material-ui/core";
 import { covidApi } from "Api/covidApi";
 import MainLayout from "Components/Layouts";
-import PieChart from "Features/Home/Components/Charts/pieChart";
-import React, { useEffect, useState } from "react";
-import {
-  addCasesToGEOJson,
-  filterContinentData,
-  transformToMapData,
-} from "Utilise/utilise";
 import WorldMap from "Features/Home/Components/Map";
+import React, { useEffect, useState } from "react";
+import { filterContinentData, transformToMapData } from "Utilise/utilise";
 
 HomePage.propTypes = {};
 
@@ -57,16 +51,7 @@ function HomePage(props) {
 
   return (
     <div>
-      <MainLayout>
-        {data && <WorldMap countriesData={data} />}
-        <Grid container>
-          <Grid item xs={12} sm={8}>
-            {continentsData && <PieChart continentsData={continentsData} />}
-          </Grid>
-
-          <Grid item xs={12}></Grid>
-        </Grid>
-      </MainLayout>
+      <MainLayout>{data && <WorldMap countriesData={data} />}</MainLayout>
     </div>
   );
 }
