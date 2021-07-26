@@ -1,36 +1,35 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { MapContainer, GeoJSON } from "react-leaflet";
-import { useTranslation } from "react-i18next";
-import { features } from "../../../../Data/countries.json";
+import React, { useEffect, useState } from "react";
+import { render } from "react-dom";
+// Import Highcharts
+import Highcharts from "highcharts";
+import HighchartsMap from "highcharts/modules/map";
+import HighchartsReact from "highcharts-react-official";
 
-Map.propTypes = {};
+import map from "@highcharts/map-collection/custom/world.geo.json";
+import { createOptionForMap } from "Utilise/utilise";
 
-function Map({ dataCovid }) {
-  const [t] = useTranslation();
-  const countryStyle = {
-    opacity: 0.5,
-    color: "black",
-    weight: 0.5,
-  };
-  console.log({ features });
+HighchartsMap(Highcharts);
 
-  const handleOnEachCountry = (country, layer) => {
-    const name = country.properties.ADMIN;
-    const textCases = country.properties.covidCase.textCases;
-    layer.bindPopup(`${name} ${t("home.covidCase")}: ${textCases}`);
-    layer.options.fillColor = country.properties.covidCase.color;
-  };
-
+const WorldMap = ({ countriesData }) => {
+  const [option, setOption] = useState();
+  useEffect(() => {
+    const options = createOptionForMap(
+      Highcharts,
+      map,
+      countriesData,
+      "Covid Map",
+      "update until today"
+    );
+    setOption(options);
+    console.log({ options });
+  }, [countriesData]);
   return (
-    <MapContainer style={{ height: "50vh", width: "100vw" }} zoom={2} center={[20, 30]}>
-      <GeoJSON
-        style={countryStyle}
-        data={dataCovid}
-        onEachFeature={handleOnEachCountry}
-      />
-    </MapContainer>
+    <HighchartsReact
+      highcharts={Highcharts}
+      options={option}
+      constructorType={"mapChart"}
+    />
   );
-}
+};
 
-export default React.memo(Map);
+export default React.memo(WorldMap);

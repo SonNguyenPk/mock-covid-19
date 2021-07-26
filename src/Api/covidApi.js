@@ -6,7 +6,7 @@ export const covidApi = {
     const url = "/all";
     return axiosClient.get(url, { params });
   },
-  getByContinent(params) {
+  getAllContinent(params) {
     const url = "/continents";
     return axiosClient.get(url, { params });
   },
