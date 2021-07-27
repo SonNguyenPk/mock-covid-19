@@ -1,4 +1,5 @@
-import _ from "lodash";
+import _, { repeat } from "lodash";
+import moment from "moment";
 
 export const checkLogin = () => {
   return window.localStorage.getItem("user");
@@ -12,16 +13,6 @@ export const checkColor = (number) => {
   if (number >= 0 && number < 1e6) return "blue";
 };
 
-// get continent list and its data
-export const filterContinentData = (data) => {
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#9ccc65", "#607d8b"];
-  const continentList = [];
-  for (let i = 0; i < data.length; i++) {
-    continentList.push(_.pick(data[i], ["continent", "cases"]));
-    continentList[i].color = COLORS[i];
-  }
-  return continentList;
-};
 
 export const transformToMapData = (data) => {
   const newData = [];
@@ -81,6 +72,10 @@ export const createOptionForMap = (Highcharts = null, map, mapData, title, subTi
       verticalAlign: "bottom",
     },
 
+    responsive: {
+      maxWidth: "100%",
+    },
+
     mapNavigation: {
       enabled: true,
       buttonOptions: {
@@ -116,12 +111,22 @@ export const createOptionForMap = (Highcharts = null, map, mapData, title, subTi
   };
 };
 
-export const createOptionForLineChart = (
-  Highcharts = null,
-  chartData,
-  title,
-  subTile = ""
-) => {
+// transform value map to chart
+export const transformDataMapToChart = (data) => {
+  if (data) {
+    const { cases, deaths, recovered } = data;
+    const dataCases = _.toPairs(cases);
+    const dataDeaths = _.toPairs(deaths);
+    const dataRecovered = _.toPairs(recovered);
+    console.log(moment("7/12/21", "DD/MM/YY").format());
+    console.log({ dataCases });
+    return { cases: dataCases, deaths: dataDeaths, recovered: dataRecovered };
+  }
+};
+
+// Create option for line chart
+export const createOptionForLineChart = (Highcharts = null, chartData, title) => {
+  const totalDay = chartData.cases.length;
   return {
     chart: {
       zoomType: "x",
@@ -129,60 +134,151 @@ export const createOptionForLineChart = (
     title: {
       text: title,
     },
+
     subtitle: {
-      text:
-        document.ontouchstart === undefined
-          ? "Click and drag in the plot area to zoom in"
-          : "Pinch the chart to zoom in",
+      text: "As of present",
     },
-    xAxis: {
-      type: "datetime",
-    },
+
     yAxis: {
       title: {
-        text: "Total cases",
+        text: "Number",
       },
     },
-    legend: {
-      enabled: false,
+
+    xAxis: {
+      breaks: {
+        from: 1,
+        to: totalDay,
+      },
+      accessibility: {
+        rangeDescription: "As of today",
+      },
+      title: {
+        text: "Day",
+      },
     },
+    responsive: {
+      maxWidth: "100%",
+    },
+    legend: {
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
+    },
+
     plotOptions: {
-      area: {
-        fillColor: {
-          linearGradient: {
-            x1: 0,
-            y1: 0,
-            x2: 0,
-            y2: 1,
-          },
-          stops: [
-            [0, Highcharts.getOptions().colors[0]],
-            [
-              1,
-              Highcharts.color(Highcharts.getOptions().colors[0])
-                .setOpacity(0)
-                .get("rgba"),
-            ],
-          ],
+      series: {
+        label: {
+          connectorAllowed: false,
         },
-        marker: {
-          radius: 2,
-        },
-        lineWidth: 1,
-        states: {
-          hover: {
-            lineWidth: 1,
-          },
-        },
-        threshold: null,
       },
     },
 
     series: [
       {
-        type: "area",
-        name: "Cases in period",
-        data: chartData,
+        name: "Cases",
+        data: chartData.cases,
+      },
+      {
+        name: "Death",
+        data: chartData.deaths,
+        color: "red",
+      },
+      {
+        name: "Recovered",
+        data: chartData.recovered,
+      },
+    ],
+  };
+};
+
+//Count day for filter covid case
+export const countNumberOfDay = (dateFrom = "01-11-2019", dateTo = "") => {
+  const pastDate = moment(dateFrom, "DD-MM-YYYY");
+  if (!dateTo) {
+    const today = moment();
+    const days = today.diff(pastDate, "days");
+    return today.diff(pastDate, "days");
+  }
+  const dateCount = moment(dateTo, "DD-MM-YYYY");
+  return dateCount.diff(pastDate, "days");
+};
+
+export const filterContinentData = (data) => {
+  const continentList = [];
+  for (let i = 0; i < data.length; i++) {
+    continentList.push(_.pick(data[i], ["continent", "cases"]));
+  return continentList;
+};
+
+//Create option for bar chart
+export const createOptionForBarChart = (Highcharts = null, chartData, title, subTitle) => {
+  return {
+    chart: {
+      type: "bar",
+    },
+    title: {
+      text: title,
+    },
+    subtitle: {
+      text: subTitle,
+    },
+    xAxis: {
+      categories: ["Africa", "America", "Asia", "Europe", "Oceania"],
+      title: {
+        text: null,
+      },
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "Population (millions)",
+        align: "high",
+      },
+      labels: {
+        overflow: "justify",
+      },
+    },
+    tooltip: {
+      valueSuffix: " millions",
+    },
+    plotOptions: {
+      bar: {
+        dataLabels: {
+          enabled: true,
+        },
+      },
+    },
+    legend: {
+      layout: "vertical",
+      align: "right",
+      verticalAlign: "top",
+      x: -40,
+      y: 80,
+      floating: true,
+      borderWidth: 1,
+      backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || "#FFFFFF",
+      shadow: true,
+    },
+    credits: {
+      enabled: false,
+    },
+    series: [
+      {
+        name: "Year 1800",
+        data: [107, 31, 635, 203, 2],
+      },
+      {
+        name: "Year 1900",
+        data: [133, 156, 947, 408, 6],
+      },
+      {
+        name: "Year 2000",
+        data: [814, 841, 3714, 727, 31],
+      },
+      {
+        name: "Year 2016",
+        data: [1216, 1001, 4436, 738, 40],
       },
     ],
   };

@@ -6,6 +6,10 @@ export const covidApi = {
     const url = "/all";
     return axiosClient.get(url, { params });
   },
+  getTimelineOfWorld(params) {
+    const url = `/historical/all`;
+    return axiosClient.get(url, { params });
+  },
   getAllContinent(params) {
     const url = "/continents";
     return axiosClient.get(url, { params });
