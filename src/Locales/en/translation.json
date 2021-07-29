@@ -13,10 +13,19 @@
     "login_forgotPassword":"Forgot password?",
     "login_haveAccount":"Don't have an account? Sign Up",
     "signup_haveAccount":"Already have an account? Sign in",
-    "signup_checkBox":"I want to receive inspiration, marketing promotions and updates via email."
+    "signup_checkBox":"I want to receive inspiration, marketing promotions and updates via email.",
+    "country":"Country",
+    "cases":"Cases",
+    "deaths":"Deaths",
+    "recovered":"Recovered"
   },
   "home": {
-    "covidCase":"total cases"
+    "covidCase":"total cases",
+    "titleLineChart":"Detail timeline of covid cases on the world ",
+    "subTitleChart":"As of present",
+    "titleBarChart":"Covid case of each continents"
+
   },
+   
   "homeDetail": {}
 }

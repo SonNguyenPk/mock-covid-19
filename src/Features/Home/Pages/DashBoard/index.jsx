@@ -1,16 +1,18 @@
-import { Grid } from "@material-ui/core";
+import { Container, Grid } from "@material-ui/core";
 import { covidApi } from "Api/covidApi";
 import MainLayout from "Components/Layouts";
 import LineChartCovid from "Features/Home/Components/LineChart";
+import BarChartCovid from "Features/Home/Components/BarChart";
 import WorldMap from "Features/Home/Components/Map";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   countNumberOfDay,
-  createDataMapToChart,
-  filterContinentData,
+  filterContinentDataMapToChart,
   transformDataMapToChart,
   transformToMapData,
 } from "Utilise/utilise";
+import { dataColorList } from "Constants/constants";
+import TableCountriesCovid from "Features/Home/Components/Table";
 
 HomePage.propTypes = {};
 
@@ -40,7 +42,6 @@ function HomePage(props) {
       setFilters(newFilters);
       const timelineData = await covidApi.getTimelineOfWorld(newFilters);
       const dataMapToChart = transformDataMapToChart(timelineData);
-      console.log({ dataMapToChart });
       setTimelineData(dataMapToChart);
     } catch (error) {}
   };
@@ -50,6 +51,7 @@ function HomePage(props) {
       const data = await covidApi.getAllCountry();
       const dataHighChart = transformToMapData(data);
       setData(dataHighChart);
+      setCountriesData(data);
     } catch (error) {
       console.log({ error });
     }
@@ -58,7 +60,7 @@ function HomePage(props) {
   const getContinentsData = async () => {
     try {
       const continentsData = await covidApi.getAllContinent();
-      setContinentsData(filterContinentData(continentsData));
+      setContinentsData(filterContinentDataMapToChart(continentsData));
     } catch (error) {
       console.log({ error });
     }
@@ -74,18 +76,22 @@ function HomePage(props) {
   };
 
   return (
-    <div>
-      <MainLayout>
+    <MainLayout>
+      <Grid>{data && <WorldMap countriesData={data} />}</Grid>
+      <Container>
         <Grid container>
-          <Grid item xs={12}>
-            {data && <WorldMap countriesData={data} />}
+          <Grid item xs={12} sm={5}>
+            {continentsData && <BarChartCovid continentsData={continentsData} />}
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={7}>
             {timelineData && <LineChartCovid timelineData={timelineData} />}
           </Grid>
+          <Grid item xs={12}>
+            {countriesData && <TableCountriesCovid countriesData={countriesData} />}
+          </Grid>
         </Grid>
-      </MainLayout>
-    </div>
+      </Container>
+    </MainLayout>
   );
 }
 

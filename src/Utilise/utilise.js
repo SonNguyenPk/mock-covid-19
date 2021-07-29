@@ -1,3 +1,4 @@
+import { FlashOnRounded, SyncDisabled } from "@material-ui/icons";
 import _, { repeat } from "lodash";
 import moment from "moment";
 
@@ -13,12 +14,10 @@ export const checkColor = (number) => {
   if (number >= 0 && number < 1e6) return "blue";
 };
 
-
 export const transformToMapData = (data) => {
   const newData = [];
   for (let i = 0; i < data.length; i++) {
     const object = {};
-    // object["iso-a3"] = data[i].countryInfo.iso3;
     object.code3 = data[i].countryInfo.iso3;
     object.z = data[i].cases;
     object.textCases = new Intl.NumberFormat().format(data[i].cases);
@@ -32,7 +31,7 @@ export const transformToMapData = (data) => {
 export const createOptionForMap = (Highcharts = null, map, mapData, title, subTile) => {
   return {
     chart: {
-      borderWidth: 1,
+      borderWidth: 0,
       map: map,
     },
 
@@ -50,17 +49,17 @@ export const createOptionForMap = (Highcharts = null, map, mapData, title, subTi
           color: "blue",
           from: 0,
           name: "<1M",
-          to: 1e6 - 1,
+          // to: 1e6 - 1,
         },
         {
           color: "green",
           from: 1e6,
           name: "<10M",
-          to: 1e7 - 1,
+          // to: 1e7 - 1,
         },
         {
           color: "red",
-          from: 1e7,
+          // from: 1e7,
           name: ">10M",
         },
       ],
@@ -115,18 +114,28 @@ export const createOptionForMap = (Highcharts = null, map, mapData, title, subTi
 export const transformDataMapToChart = (data) => {
   if (data) {
     const { cases, deaths, recovered } = data;
-    const dataCases = _.toPairs(cases);
-    const dataDeaths = _.toPairs(deaths);
-    const dataRecovered = _.toPairs(recovered);
-    console.log(moment("7/12/21", "DD/MM/YY").format());
-    console.log({ dataCases });
-    return { cases: dataCases, deaths: dataDeaths, recovered: dataRecovered };
+    const dataCases = _.values(cases);
+    const dataDeaths = _.values(deaths);
+    const dataRecovered = _.values(recovered);
+    const timeline = _.keys(cases);
+    return {
+      cases: dataCases,
+      deaths: dataDeaths,
+      recovered: dataRecovered,
+      timeline: timeline,
+    };
   }
 };
 
 // Create option for line chart
-export const createOptionForLineChart = (Highcharts = null, chartData, title) => {
+export const createOptionForLineChart = (
+  Highcharts = null,
+  chartData,
+  title,
+  subTitle
+) => {
   const totalDay = chartData.cases.length;
+
   return {
     chart: {
       zoomType: "x",
@@ -136,7 +145,7 @@ export const createOptionForLineChart = (Highcharts = null, chartData, title) =>
     },
 
     subtitle: {
-      text: "As of present",
+      text: subTitle,
     },
 
     yAxis: {
@@ -146,10 +155,7 @@ export const createOptionForLineChart = (Highcharts = null, chartData, title) =>
     },
 
     xAxis: {
-      breaks: {
-        from: 1,
-        to: totalDay,
-      },
+      categories: chartData.timeline,
       accessibility: {
         rangeDescription: "As of today",
       },
@@ -157,9 +163,9 @@ export const createOptionForLineChart = (Highcharts = null, chartData, title) =>
         text: "Day",
       },
     },
-    responsive: {
-      maxWidth: "100%",
-    },
+    // responsive: {
+    //   maxWidth: "100%",
+    // },
     legend: {
       layout: "horizontal",
       align: "center",
@@ -204,15 +210,22 @@ export const countNumberOfDay = (dateFrom = "01-11-2019", dateTo = "") => {
   return dateCount.diff(pastDate, "days");
 };
 
-export const filterContinentData = (data) => {
+export const filterContinentDataMapToChart = (data) => {
+  console.log({ data });
   const continentList = [];
   for (let i = 0; i < data.length; i++) {
-    continentList.push(_.pick(data[i], ["continent", "cases"]));
+    continentList.push({ name: data[i].continent, data: [data[i].cases] });
+  }
+  console.log({ continentList });
   return continentList;
 };
 
-//Create option for bar chart
-export const createOptionForBarChart = (Highcharts = null, chartData, title, subTitle) => {
+export const createOptionForBarChart = (
+  Highcharts = null,
+  chartData,
+  title,
+  subTitle
+) => {
   return {
     chart: {
       type: "bar",
@@ -224,26 +237,26 @@ export const createOptionForBarChart = (Highcharts = null, chartData, title, sub
       text: subTitle,
     },
     xAxis: {
-      categories: ["Africa", "America", "Asia", "Europe", "Oceania"],
       title: {
-        text: null,
+        text: "Continent",
       },
     },
+    // responsive: {
+    //   maxWidth: "100%",
+    // },
     yAxis: {
-      min: 0,
       title: {
-        text: "Population (millions)",
+        text: "Total cases",
         align: "high",
       },
       labels: {
         overflow: "justify",
       },
     },
-    tooltip: {
-      valueSuffix: " millions",
-    },
+    tooltip: {},
     plotOptions: {
       bar: {
+        groupPadding: 0.1,
         dataLabels: {
           enabled: true,
         },
@@ -252,9 +265,9 @@ export const createOptionForBarChart = (Highcharts = null, chartData, title, sub
     legend: {
       layout: "vertical",
       align: "right",
-      verticalAlign: "top",
-      x: -40,
-      y: 80,
+      verticalAlign: "bottom",
+      x: 0,
+      y: -40,
       floating: true,
       borderWidth: 1,
       backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || "#FFFFFF",
@@ -263,23 +276,6 @@ export const createOptionForBarChart = (Highcharts = null, chartData, title, sub
     credits: {
       enabled: false,
     },
-    series: [
-      {
-        name: "Year 1800",
-        data: [107, 31, 635, 203, 2],
-      },
-      {
-        name: "Year 1900",
-        data: [133, 156, 947, 408, 6],
-      },
-      {
-        name: "Year 2000",
-        data: [814, 841, 3714, 727, 31],
-      },
-      {
-        name: "Year 2016",
-        data: [1216, 1001, 4436, 738, 40],
-      },
-    ],
+    series: chartData,
   };
 };
