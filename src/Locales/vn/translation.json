@@ -13,10 +13,17 @@
     "login_forgetPassword":"Quên mật khẩu?",
     "login_haveAccount":"Đã có tài khoản, đi tới trang đăng nhập",
     "signup_haveAccount":"Bạn đã có tài khoản rồi, Đăng nhập?",
-    "signup_checkBox":"Tôi muốn nhận thông tin qua mail"
+    "signup_checkBox":"Tôi muốn nhận thông tin qua mail",
+    "country":"Quốc gia",
+    "cases":"Số ca nhiễm",
+    "deaths":"Số người chết",
+    "recovered":"Hồi phục"
   },
   "home": {
-    "covidCase":"tổng ca nhiễm"
+    "covidCase":"tổng ca nhiễm",
+    "titleLineChart":"Chi tiết ca nhiễm covid trên thế gới theo thời gian",
+    "subTitleChart":"Tính đến thời điểm hiện tại",
+   "titleBarChart":"Số ca nhiễm covid theo từng Châu lục"
   },
   "homeDetail": {}
 }
