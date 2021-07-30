@@ -44,7 +44,7 @@ function NewsPage(props) {
         <Grid container justifyContent="space-between" spacing={3}>
           {newsList &&
             newsList?.map((news) => (
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={4} key={news.description}>
                 <NewsCardItem news={news} />
               </Grid>
             ))}
