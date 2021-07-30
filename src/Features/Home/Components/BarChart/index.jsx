@@ -7,7 +7,7 @@ import { createOptionForBarChart } from "Utilise/utilise";
 BarChartCovid.propTypes = {};
 
 function BarChartCovid({ continentsData }) {
-  const [option, setOption] = useState();
+  const [option, setOption] = useState({});
   const [t] = useTranslation();
 
   const title = t("home.titleBarChart");
@@ -15,16 +15,10 @@ function BarChartCovid({ continentsData }) {
 
   useEffect(() => {
     const options = createOptionForBarChart(Highcharts, continentsData, title, subTitle);
-    console.log({ options });
     setOption(options);
   }, [continentsData]);
 
-  return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={option}
-    />
-  );
+  return <HighchartsReact highcharts={Highcharts} options={option} />;
 }
 
-export default React.memo(BarChartCovid);
+export default BarChartCovid;

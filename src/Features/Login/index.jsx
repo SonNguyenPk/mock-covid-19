@@ -6,7 +6,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -17,18 +16,18 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://source.unsplash.com">
-        Your Website
-      </Link>
-      {new Date().getFullYear()}
-    </Typography>
+    <Box>
+      <Typography variant="body2" color="textSecondary" align="center">
+        {"Copyright © "}
+        {new Date().getFullYear()}
+      </Typography>
+      <Link to={router.news}>Back to news</Link>
+    </Box>
   );
 }
 
@@ -79,7 +78,7 @@ const schema = yup.object().shape({
 export default function LoginPage() {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const [t, i18n] = useTranslation();
+  const [t] = useTranslation();
   const form = useForm({
     mode: "onSubmit",
     defaultValues: initialValues,
@@ -127,14 +126,10 @@ export default function LoginPage() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  {t("common.login_forgotPassword")}
-                </Link>
+                <Link to={router.register}>{t("common.login_forgotPassword")}</Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {t("common.login_haveAccount")}
-                </Link>
+                <Link to={router.register}>{t("common.login_haveAccount")}</Link>
               </Grid>
             </Grid>
             <Box mt={5}>

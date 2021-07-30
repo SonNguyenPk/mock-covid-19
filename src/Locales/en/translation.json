@@ -20,10 +20,12 @@
     "recovered":"Recovered"
   },
   "home": {
+    "title":"Hello <1>{{summaryData.deaths}}</1>, you have <3>{{summaryData.dateUpdated}}</3> unread message. <5>Go to message</5>.",
     "covidCase":"total cases",
-    "titleLineChart":"Detail timeline of covid cases on the world ",
+    "titleLineChart":"Detail timeline of covid cases ",
     "subTitleChart":"As of present",
-    "titleBarChart":"Covid case of each continents"
+    "titleBarChart":"Covid case of each continents",
+    "tableTitle":"Detail of each country"
 
   },
    
