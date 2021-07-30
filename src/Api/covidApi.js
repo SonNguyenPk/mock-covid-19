@@ -1,5 +1,5 @@
-import axios from "axios";
 import axiosClient from "./clientApi";
+import axiosClientNews from "./clientNewsApi";
 
 export const covidApi = {
   getSummary(params) {
@@ -22,5 +22,24 @@ export const covidApi = {
   getByCountry(country, params) {
     const url = `/historical/${country}`;
     return axiosClient.get(url, { params });
+  },
+  getSummaryOfCountry(country) {
+    const url = `/countries/${country}`;
+    return axiosClient.get(url);
+  },
+};
+
+export const newsApi = {
+  getAllNews(params) {
+    const url = "/everything";
+    return axiosClientNews.get(url, { params });
+  },
+  getAllHotNews(params) {
+    const url = "/top-headlines/sources";
+    return axiosClientNews.get(url, { params });
+  },
+  getHotNews(params) {
+    const url = "/top-headlines";
+    return axiosClientNews.get(url, { params });
   },
 };

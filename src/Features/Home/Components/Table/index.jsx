@@ -1,14 +1,15 @@
 import { Avatar, Box, Chip, makeStyles, TextField } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { Autocomplete } from "@material-ui/lab";
+import { router } from "Constants/constants";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
 const transformDataMapToTable = (data) => {
   if (data.length) {
-    console.log({ data });
     const tableData = [];
     for (let i = 0; i < data.length; ++i) {
       tableData.push(
@@ -33,19 +34,28 @@ const useStyles = makeStyles(
       flexWrap: "wrap",
       margin: "1rem",
     },
-    textField: {
-      [theme.breakpoints.down("xs")]: {
-        width: "100%",
+    countryFlag: {
+      display: "none",
+      textField: {
+        [theme.breakpoints.down("xs")]: {
+          width: "100%",
+        },
+        margin: theme.spacing(1, 0.5, 1.5),
+        "& .MuiSvgIcon-root": {
+          marginRight: theme.spacing(0.5),
+        },
+        "& .MuiInput-underline:before": {
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        },
       },
-      margin: theme.spacing(1, 0.5, 1.5),
-      "& .MuiSvgIcon-root": {
-        marginRight: theme.spacing(0.5),
-      },
-      "& .MuiInput-underline:before": {
-        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+    [theme.breakpoints.up("sm")]: {
+      countryFlag: {
+        display: "block",
       },
     },
   })
+
   //   { defaultTheme }
 );
 
@@ -56,7 +66,6 @@ function QuickSearchToolbar(props) {
     <div className={classes.root}>
       <Autocomplete
         autoHighlight
-        autoSelect
         fullWidth
         filterSelectedOptions
         noOptionsText="No country match"
@@ -87,38 +96,32 @@ QuickSearchToolbar.propTypes = {
 };
 
 export default function TableCountriesCovid({ countriesData }) {
-  const [data, setData] = useState();
-  const [searchResult, setSearchResult] = useState();
+  const history = useHistory();
+  const [searchResult, setSearchResult] = useState([]);
   const [t] = useTranslation();
 
   const dataTable = useMemo(
     () => transformDataMapToTable(countriesData),
     [countriesData]
   );
-  useEffect(() => {
-    if (searchResult) {
-      setData(searchResult);
-      console.log({ dataTable });
-    }
-    if (!searchResult.length) {
-      setData("");
-    }
-  }, [searchResult]);
 
   const debounce = _.debounce((value) => requestSearch(value), 200);
-  const handleSearch = useCallback((value) => debounce(value), []);
+  const handleSearch = useCallback((value) => debounce(value), [searchResult]);
 
   const requestSearch = (value) => {
-    console.log("ref", value);
+    console.log({ value });
     setSearchResult(value);
   };
-
-  const handleDeleteSearchResultArray = (value, idx) => {
-    console.log("delete search");
+  const handleSelectRow = (params) => {
+    console.log({ params });
+    const idCountry = params.row.countryInfo.iso2;
+    history.push(`${router.homeDetail}/${idCountry}`);
   };
 
+  const classes = useStyles();
+
   return (
-    <div style={{ height: "50vh", width: "100%" }}>
+    <div style={{ height: "80vh", minWidth: "100%" }}>
       <DataGrid
         components={{
           Toolbar: QuickSearchToolbar,
@@ -126,30 +129,53 @@ export default function TableCountriesCovid({ countriesData }) {
         componentsProps={{
           toolbar: {
             onSelect: (value) => handleSearch(value),
-            onDelete: (value, idx) => handleDeleteSearchResultArray(value, idx),
             options: dataTable,
           },
         }}
         columns={[
           {
+            disableColumnMenu: true,
             field: "country",
             headerName: `${t("common.country")}`,
             minWidth: 50,
             flex: 1,
             renderCell: (params) => (
-              <Box display="flex" flexFlow="row nowrap" alignItems="center">
-                <Avatar alt={params.value} src={params.row.countryInfo.flag}>
-                  `${console.log({ params })}`
-                </Avatar>
+              <Box
+                display="flex"
+                flexDirection="row"
+                flexWrap="nowrap"
+                alignItems="center"
+              >
+                <Avatar
+                  alt={params.value}
+                  src={params.row.countryInfo.flag}
+                  className={classes.countryFlag}
+                ></Avatar>
                 <Box marginLeft="16px">{params.value}</Box>
               </Box>
             ),
           },
-          { field: "cases", headerName: `${t("common.cases")}`, flex: 0.5 },
-          { field: "deaths", headerName: `${t("common.deaths")}`, flex: 0.5 },
-          { field: "recovered", headerName: `${t("common.recovered")}`, flex: 0.5 },
+          {
+            field: "cases",
+            headerName: `${t("common.cases")}`,
+            flex: 0.5,
+            disableColumnMenu: true,
+          },
+          {
+            field: "deaths",
+            headerName: `${t("common.deaths")}`,
+            flex: 0.5,
+            disableColumnMenu: true,
+          },
+          {
+            field: "recovered",
+            headerName: `${t("common.recovered")}`,
+            flex: 0.5,
+            disableColumnMenu: true,
+          },
         ]}
-        rows={data || dataTable}
+        onRowClick={(params) => handleSelectRow(params)}
+        rows={searchResult.length > 0 ? searchResult : dataTable}
       />
     </div>
   );

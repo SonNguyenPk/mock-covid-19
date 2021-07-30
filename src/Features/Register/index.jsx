@@ -1,25 +1,23 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import LoadingButton from "Components/LoadingButton";
-import InputTextField from "Components/FormFields/inputTextField";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
+import { Button } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import Checkbox from "@material-ui/core/Checkbox";
+import Container from "@material-ui/core/Container";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import InputTextField from "Components/FormFields/inputTextField";
 import SelectionLanguage from "Components/Layouts/SelectionLanguage";
+import { router } from "Constants/constants";
+import { useSnackbar } from "notistack";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { Link, useHistory } from "react-router-dom";
+import * as yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
+    "& a": {
+      textDecoration: "none",
+    },
   },
   submit: {
     width: "100%",
@@ -72,6 +73,8 @@ const schema = yup.object().shape({
 export default function SignUp() {
   const classes = useStyles();
   const [t, i18n] = useTranslation();
+  const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
   const form = useForm({
     mode: "onSubmit",
@@ -84,6 +87,11 @@ export default function SignUp() {
   };
   const handleRegister = (data) => {
     JSON.stringify(window.localStorage.setItem("user"));
+    enqueueSnackbar("Login successfully", {
+      variant: "success",
+      preventDuplicate: true,
+    });
+    history.push(router.home);
   };
 
   return (
@@ -102,7 +110,7 @@ export default function SignUp() {
           onSubmit={form.handleSubmit(handleRegister)}
         >
           <Grid container spacing={1}>
-            <Grid item xs={12} sm={6} marginTop="0">
+            <Grid item xs={12} sm={6}>
               <InputTextField
                 name="firstName"
                 label="firstName"
@@ -110,7 +118,7 @@ export default function SignUp() {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={6} marginTop="0">
+            <Grid item xs={12} sm={6}>
               <InputTextField
                 name="lastName"
                 label="lastName"
@@ -138,15 +146,19 @@ export default function SignUp() {
               />
             </Grid>
           </Grid>
-          <Box className={classes.submit} component="button" type="submit">
-            <LoadingButton>{t("register")}</LoadingButton>
-          </Box>
+
+          <Button
+            className={classes.submit}
+            variant="contained"
+            color="primary"
+            type="submit"
+          >
+            {t("common.register")}
+          </Button>
 
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
-              <Link href="#" variant="body2">
-                {t("common.signup_haveAccount")}
-              </Link>
+              <Link to={router.login}>{t("common.signup_haveAccount")}</Link>
             </Grid>
             <Grid item className={classes.changeLanguageButton}>
               <SelectionLanguage onChangeLanguage={handleChangeLanguage} />
@@ -154,9 +166,6 @@ export default function SignUp() {
           </Grid>
         </form>
       </div>
-      {/* <Box mt={5}>
-        <Copyright />
-      </Box> */}
     </Container>
   );
 }

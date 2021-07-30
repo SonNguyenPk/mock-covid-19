@@ -16,7 +16,7 @@ import { router } from "Constants/constants";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { globalActions } from "Redux/rootAction";
 import { checkLogin } from "Utilise/utilise";
 import NavigationBar from "./NavigationBar";
@@ -152,7 +152,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainLayout(props) {
   const [open, setOpen] = useState(false);
-  const { t, i18n } = useTranslation();
+  const history = useHistory();
+  const { t } = useTranslation();
   const globalState = useSelector((state) => state.global);
   const dispatch = useDispatch();
 
@@ -180,6 +181,10 @@ export default function MainLayout(props) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+  const handleLogOut = () => {
+    window.localStorage.removeItem("user");
+    history.push(`${router.news}`);
   };
 
   const classes = useStyles();
@@ -209,6 +214,7 @@ export default function MainLayout(props) {
                 <HomeIcon />
               </IconButton>
             </Link>
+
             <Typography className={classes.appBarTitle} variant="h6" noWrap>
               Covid-19
             </Typography>
@@ -232,7 +238,12 @@ export default function MainLayout(props) {
               checked={globalState.themeMode === "dark" ? true : false}
             />
             {checkLogin() ? (
-              <Button variant="contained" color="primary" size="small">
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={handleLogOut}
+              >
                 {t("common.logout")}
               </Button>
             ) : (

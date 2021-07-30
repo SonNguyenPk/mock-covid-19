@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import { ButtonGroup } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
-import Button from "@material-ui/core/Button";
-import Fab from "@material-ui/core/Fab";
-import CheckIcon from "@material-ui/icons/Check";
-import SaveIcon from "@material-ui/icons/Save";
-import { PinDropSharp } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
+import React, { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
-    "&>button": {
-      width: "100%",
+    margin: "12px 0",
+    width: "100%",
+    height: "100%",
+    "&> button": {
+      // width: "100%",
+      // height: "40px",
     },
   },
 
@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: "50%",
     left: "50%",
-    marginTop: -12,
-    marginLeft: -12,
+    margin: "-12px 0 0 -12px",
+    // marginLeft: -12,
   },
 }));
 
@@ -64,16 +64,17 @@ export default function LoadingButton(props) {
 
   return (
     <div className={classes.root}>
-      <Button
+      <ButtonGroup
         variant="contained"
         color="primary"
+        aria-label="contained primary button group"
         className={buttonClassname}
         disabled={loading}
         onClick={handleButtonClick}
         type={props.type}
       >
         {props.children}
-      </Button>
+      </ButtonGroup>
       {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
     </div>
   );

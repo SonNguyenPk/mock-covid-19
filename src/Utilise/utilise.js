@@ -1,5 +1,4 @@
-import { FlashOnRounded, SyncDisabled } from "@material-ui/icons";
-import _, { repeat } from "lodash";
+import _ from "lodash";
 import moment from "moment";
 
 export const checkLogin = () => {
@@ -28,7 +27,14 @@ export const transformToMapData = (data) => {
 };
 
 // Create option file for map
-export const createOptionForMap = (Highcharts = null, map, mapData, title, subTile) => {
+export const createOptionForMap = (
+  Highcharts = null,
+  map,
+  mapData,
+  title,
+  subTile,
+  ...rest
+) => {
   return {
     chart: {
       borderWidth: 0,
@@ -66,14 +72,24 @@ export const createOptionForMap = (Highcharts = null, map, mapData, title, subTi
     },
 
     legend: {
+      enabled: rest.length > 0 ? false : true,
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
     },
 
-    responsive: {
-      maxWidth: "100%",
-    },
+    // responsive: {
+    //   rules: [
+    //     {
+    //       condition: {
+    //         minWidth: 375,
+    //         chart: {
+    //           width: 300,
+    //         },
+    //       },
+    //     },
+    //   ],
+    // },
 
     mapNavigation: {
       enabled: true,
@@ -100,8 +116,8 @@ export const createOptionForMap = (Highcharts = null, map, mapData, title, subTi
 
       {
         type: "mapline",
-        name: "Separators",
-        data: mapData,
+        // name: "Separators",
+        // data: mapData,
         nullColor: "gray",
         showInLegend: false,
         enableMouseTracking: true,
@@ -134,8 +150,6 @@ export const createOptionForLineChart = (
   title,
   subTitle
 ) => {
-  const totalDay = chartData.cases.length;
-
   return {
     chart: {
       zoomType: "x",
@@ -163,9 +177,7 @@ export const createOptionForLineChart = (
         text: "Day",
       },
     },
-    // responsive: {
-    //   maxWidth: "100%",
-    // },
+
     legend: {
       layout: "horizontal",
       align: "center",
@@ -203,7 +215,7 @@ export const countNumberOfDay = (dateFrom = "01-11-2019", dateTo = "") => {
   const pastDate = moment(dateFrom, "DD-MM-YYYY");
   if (!dateTo) {
     const today = moment();
-    const days = today.diff(pastDate, "days");
+    // const days = today.diff(pastDate, "days");
     return today.diff(pastDate, "days");
   }
   const dateCount = moment(dateTo, "DD-MM-YYYY");
@@ -241,9 +253,7 @@ export const createOptionForBarChart = (
         text: "Continent",
       },
     },
-    // responsive: {
-    //   maxWidth: "100%",
-    // },
+
     yAxis: {
       title: {
         text: "Total cases",

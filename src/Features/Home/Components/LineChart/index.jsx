@@ -5,10 +5,13 @@ import HighchartsReact from "highcharts-react-official";
 import { createOptionForLineChart } from "Utilise/utilise";
 import { useTranslation } from "react-i18next";
 
-LineChartCovid.propTypes = {};
+LineChartCovid.propTypes = {
+  timelineData: PropTypes.object,
+};
 
 function LineChartCovid({ timelineData }) {
-  const [option, setOption] = useState();
+  console.log({ timelineData });
+  const [option, setOption] = useState({});
 
   const [t] = useTranslation();
 
@@ -17,17 +20,10 @@ function LineChartCovid({ timelineData }) {
 
   useEffect(() => {
     const options = createOptionForLineChart(Highcharts, timelineData, title, subTitle);
-    console.log({ options });
     setOption(options);
   }, [timelineData]);
 
-  return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={option}
-      //   constructorType={"stockChart"}
-    />
-  );
+  return <HighchartsReact highcharts={Highcharts} options={option} />;
 }
 
-export default LineChartCovid;
+export default React.memo(LineChartCovid);

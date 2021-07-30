@@ -1,13 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { Box, Button, Divider, makeStyles } from "@material-ui/core";
-import { NavLink } from "react-router-dom";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
 import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
+import WhatshotIcon from "@material-ui/icons/Whatshot";
 import { router } from "Constants/constants";
+import React from "react";
 import { useTranslation } from "react-i18next";
-
-NavigationBar.propTypes = {};
+import { NavLink, useHistory } from "react-router-dom";
+import { checkLogin } from "Utilise/utilise";
 
 const useStyles = makeStyles((theme) => ({
   appBarNavigation: {
@@ -28,12 +26,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NavigationBar(props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const classes = useStyles();
+  const history = useHistory();
+
+  const handleCheckLogin = () => {
+    if (!checkLogin()) {
+      alert("you must login to see Home page");
+    }
+  };
   return (
     <Box className={classes.appBarNavigation}>
       <NavLink exact to={router.home}>
-        <Button startIcon={<HomeOutlinedIcon />}>{t("common.home")}</Button>
+        <Button onClick={handleCheckLogin} startIcon={<HomeOutlinedIcon />}>
+          {t("common.home")}
+        </Button>
       </NavLink>
       <Divider />
       <NavLink to={router.news}>
