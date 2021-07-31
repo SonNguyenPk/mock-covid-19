@@ -55,17 +55,17 @@ export const createOptionForMap = (
           color: "blue",
           from: 0,
           name: "<1M",
-          // to: 1e6 - 1,
+          to: 1e6 - 1,
         },
         {
           color: "green",
           from: 1e6,
           name: "<10M",
-          // to: 1e7 - 1,
+          to: 1e7 - 1,
         },
         {
           color: "red",
-          // from: 1e7,
+          from: 1e7,
           name: ">10M",
         },
       ],
@@ -77,19 +77,6 @@ export const createOptionForMap = (
       align: "center",
       verticalAlign: "bottom",
     },
-
-    // responsive: {
-    //   rules: [
-    //     {
-    //       condition: {
-    //         minWidth: 375,
-    //         chart: {
-    //           width: 300,
-    //         },
-    //       },
-    //     },
-    //   ],
-    // },
 
     mapNavigation: {
       enabled: true,
@@ -180,7 +167,7 @@ export const createOptionForLineChart = (
 
     legend: {
       layout: "horizontal",
-      align: "center",
+      align: "right",
       verticalAlign: "bottom",
     },
 
