@@ -288,6 +288,7 @@ export default function MainLayout(props) {
         </Container>
       </Drawer>
       <main
+        style={{ width: "100%" }}
         className={clsx(classes.content, {
           [classes.contentShift]: open,
         })}
