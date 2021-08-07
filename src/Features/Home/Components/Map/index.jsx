@@ -1,106 +1,46 @@
 import map from "@highcharts/map-collection/custom/world.geo.json";
+import { darkTheme } from "Constants/themeHighcharts";
 // Import Highcharts
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import HighchartsMap from "highcharts/modules/map";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { createOptionForMap } from "Utilise/utilise";
 
-HighchartsMap(Highcharts);
-const inItOption = {
-  chart: {
-    borderWidth: 0,
-    // map: map,
-  },
+// HighchartsMap(Highcharts);
 
-  title: {
-    text: "",
-  },
-
-  subtitle: {
-    text: "",
-  },
-
-  colorAxis: {
-    dataClasses: [
-      {
-        color: "blue",
-        from: 0,
-        name: "<1M",
-        // to: 1e6 - 1,
-      },
-      {
-        color: "green",
-        from: 1e6,
-        name: "<10M",
-        // to: 1e7 - 1,
-      },
-      {
-        color: "red",
-        // from: 1e7,
-        name: ">10M",
-      },
-    ],
-  },
-
-  legend: {
-    // enabled: rest.length > 0 ? false : true,
-    layout: "horizontal",
-    align: "center",
-    verticalAlign: "bottom",
-  },
-
-  mapNavigation: {
-    enabled: true,
-    buttonOptions: {
-      verticalAlign: "bottom",
-    },
-  },
-  tooltip: {
-    pointFormat: "{point.properties.name}: {point.textCases}",
-  },
-
-  series: [
-    {
-      data: "",
-      mapData: "",
-      joinBy: ["iso-a3", "code3"],
-      name: "Total cases",
-      states: {
-        hover: {
-          color: Highcharts.getOptions().colors[2],
-        },
-      },
-    },
-
-    {
-      type: "mapline",
-      name: "Separators",
-      data: "",
-      nullColor: "gray",
-      showInLegend: false,
-      enableMouseTracking: true,
-    },
-  ],
-};
-
-const WorldMap = ({ countriesData }) => {
+const WorldMap = ({ countriesData, isLoading }) => {
   const [option, setOption] = useState({});
+  const [highCharts, setHighCharts] = useState();
+  const globalState = useSelector((state) => state.global);
+
   useEffect(() => {
-    const options = createOptionForMap(
-      Highcharts,
-      map,
-      countriesData,
-      "Covid Map",
-      "update until today"
-    );
-    setOption(options);
-  }, [countriesData]);
+    (async () => {
+      try {
+        const response = await import("highcharts");
+        const highCharts = response.default;
+        console.log({ highCharts });
+        HighchartsMap(highCharts);
+        setHighCharts(highCharts);
+
+        const options = createOptionForMap(
+          map,
+          countriesData,
+          "Covid Map",
+          "update until today"
+        );
+        setOption(options);
+        console.log("re-render");
+      } catch (error) {}
+    })();
+  }, [countriesData, globalState.themeMode]);
   return (
     <HighchartsReact
-      highcharts={Highcharts}
+      highcharts={highCharts}
       options={option}
       constructorType={"mapChart"}
+      immutable
     />
   );
 };

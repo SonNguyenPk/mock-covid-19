@@ -24,6 +24,7 @@ function App() {
       type: globalState.themeMode,
     },
   });
+
   useEffect(() => {
     i18n.changeLanguage(globalState.language);
   }, [globalState]);

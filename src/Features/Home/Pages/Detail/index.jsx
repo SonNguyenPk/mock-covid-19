@@ -4,6 +4,7 @@ import MainLayout from "Components/Layouts";
 import CountryMap from "Features/Home/Components/CountryMap";
 import LineChartCovid from "Features/Home/Components/LineChart";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { countNumberOfDay, transformDataMapToChart } from "Utilise/utilise";
 
@@ -13,9 +14,14 @@ function CountryDetail(props) {
   const { country } = useParams();
   const [countryDataTimeline, setCountryDataTimeline] = useState();
   const [countrySummary, setCountrySummary] = useState();
+  const [isError, setIsError] = useState(false);
+  const [t] = useTranslation();
 
   useEffect(() => {
     getCountryDetail(country);
+  }, [country]);
+
+  useEffect(() => {
     getCountrySummary(country);
   }, [country]);
 
@@ -27,7 +33,9 @@ function CountryDetail(props) {
       });
       const dataMapToChart = transformDataMapToChart(timelineData.timeline);
       setCountryDataTimeline(dataMapToChart);
-    } catch (error) {}
+    } catch (error) {
+      setIsError(true);
+    }
   };
 
   const getCountrySummary = async (country) => {
@@ -55,6 +63,7 @@ function CountryDetail(props) {
               </Typography> */}
             </Grid>
             <Grid item xs={12}>
+              {isError && <Typography> {t("error.failLoadingData")}</Typography>}
               {countryDataTimeline && (
                 <LineChartCovid timelineData={countryDataTimeline} />
               )}

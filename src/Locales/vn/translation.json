@@ -20,11 +20,17 @@
     "recovered": "Hồi phục"
   },
   "home": {
+    "title":"Tính dến ngày <1>{{updatedAt}}</1>, có <3>{{cases}}</3> ca nhiễm covid-19 trên thế giớ, trong đó <5>{{deaths}}</5> ca tử vong, <7>{{recovered}}</7> ca hồi phục được báo cáo lên WHO",
     "covidCase": "tổng ca nhiễm",
     "titleLineChart": "Chi tiết ca nhiễm covid theo thời gian",
     "subTitleChart": "Tính đến thời điểm hiện tại",
     "titleBarChart": "Số ca nhiễm covid theo từng Châu lục",
     "tableTitle": "Chi tiết thông kê theo từng nước"
   },
-  "homeDetail": {}
+  "homeDetail": {},
+  "error":{
+    "failLoadingMap":"Lỗi tải dữ liệu bản đồ",
+    "failLoadingData":"Lỗi tải dữ liệu"
+   }
+  
 }
