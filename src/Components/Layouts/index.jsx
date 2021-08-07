@@ -13,7 +13,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import { router } from "Constants/constants";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
@@ -21,6 +21,8 @@ import { globalActions } from "Redux/rootAction";
 import { checkLogin } from "Utilise/utilise";
 import NavigationBar from "./NavigationBar";
 import SelectionLanguage from "./SelectionLanguage";
+import Highcharts from "highcharts";
+import { darkTheme, defaultTheme } from "Constants/themeHighcharts";
 
 const drawerWidth = "100vw";
 
@@ -152,6 +154,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainLayout(props) {
   const [open, setOpen] = useState(false);
+
   const history = useHistory();
   const { t } = useTranslation();
   const globalState = useSelector((state) => state.global);
@@ -168,6 +171,21 @@ export default function MainLayout(props) {
       dispatch(action);
     }
   };
+
+  //change theme darkmode
+  useEffect(() => {
+    (() => {
+      if (globalState.themeMode === "dark") {
+        Highcharts.theme = darkTheme;
+        // DarkBlue(Highcharts);
+        Highcharts.setOptions(Highcharts.theme);
+      }
+      if (globalState.themeMode === "light") {
+        Highcharts.theme = defaultTheme;
+        Highcharts.setOptions(Highcharts.theme);
+      }
+    })();
+  }, [globalState.themeMode]);
 
   const handleChangeLanguage = (value) => {
     // i18n.changeLanguage(value);

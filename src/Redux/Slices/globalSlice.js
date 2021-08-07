@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const GlobalSlice = createSlice({
   name: "global",
-  initialState: { themeMode: "light", language: "en" },
+  initialState: { themeMode: "light", language: "en"},
   reducers: {
     changeThemeMode(state, action) {
       state.themeMode = action.payload.themeMode;

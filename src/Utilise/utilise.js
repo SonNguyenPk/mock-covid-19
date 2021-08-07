@@ -28,7 +28,7 @@ export const transformToMapData = (data) => {
 
 // Create option file for map
 export const createOptionForMap = (
-  Highcharts = null,
+  // Highcharts = null,
   map,
   mapData,
   title,
@@ -39,6 +39,7 @@ export const createOptionForMap = (
     chart: {
       borderWidth: 0,
       map: map,
+      styleMode: true,
     },
 
     title: {
@@ -72,7 +73,7 @@ export const createOptionForMap = (
     },
 
     legend: {
-      enabled: rest.length > 0 ? false : true,
+      enabled: rest?.length > 0 ? false : true,
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
@@ -83,6 +84,9 @@ export const createOptionForMap = (
       buttonOptions: {
         verticalAlign: "bottom",
       },
+    },
+    loading: {
+      showDuration: 100,
     },
     tooltip: {
       pointFormat: "{point.properties.name}: {point.textCases}",
@@ -96,15 +100,13 @@ export const createOptionForMap = (
         name: "Total cases",
         states: {
           hover: {
-            color: Highcharts.getOptions().colors[2],
+            color: "pink",
           },
         },
       },
 
       {
         type: "mapline",
-        // name: "Separators",
-        // data: mapData,
         nullColor: "gray",
         showInLegend: false,
         enableMouseTracking: true,
@@ -114,20 +116,58 @@ export const createOptionForMap = (
 };
 
 // transform value map to chart
-export const transformDataMapToChart = (data) => {
-  if (data) {
-    const { cases, deaths, recovered } = data;
-    const dataCases = _.values(cases);
-    const dataDeaths = _.values(deaths);
-    const dataRecovered = _.values(recovered);
-    const timeline = _.keys(cases);
+export const transformDataMapToChart = (data, gap = 1) => {
+  if (!data) return;
+
+  const { cases, deaths, recovered } = data;
+  const dataCases = _.values(cases);
+  const dataDeaths = _.values(deaths);
+  const dataRecovered = _.values(recovered);
+  const timeline = _.map(_.keys(cases), (x) =>
+    moment(x, "MM/DD/YY").format("DD/MM/YYYY")
+  );
+  const timeStampList = _.map(timeline, (x) => moment.utc(x, "DD/MM/YYYY").format("x"));
+
+  if (gap > 1) {
+    const dataLength = dataCases.length;
+    const z = (dataLength - 1) % gap;
+    console.log({ z, dataLength, gap });
+    const dataCasesSortedByGap = [];
+    const dataDeathsSortedByGap = [];
+    const dataRecoveredSortedByGap = [];
+    const timelineSortedByGap = [];
+
+    for (let i = 0; i < dataLength - 1; i += gap) {
+      dataCasesSortedByGap.push(dataCases[i]);
+      dataDeathsSortedByGap.push(dataDeaths[i]);
+      dataRecoveredSortedByGap.push(dataRecovered[i]);
+      timelineSortedByGap.push(timeline[i]);
+    }
+    if (z) {
+      console.log({ z });
+      dataCasesSortedByGap.push(dataCases[dataLength - 1]);
+      dataDeathsSortedByGap.push(dataDeaths[dataLength - 1]);
+      dataRecoveredSortedByGap.push(dataRecovered[dataLength - 1]);
+      timelineSortedByGap.push(timeline[dataLength - 1]);
+    }
     return {
-      cases: dataCases,
-      deaths: dataDeaths,
-      recovered: dataRecovered,
-      timeline: timeline,
+      cases: dataCasesSortedByGap,
+      deaths: dataDeathsSortedByGap,
+      recovered: dataRecoveredSortedByGap,
+      timeStampList: timeStampList,
+      timeline: timelineSortedByGap,
+      gap: gap,
     };
   }
+
+  return {
+    cases: dataCases,
+    deaths: dataDeaths,
+    recovered: dataRecovered,
+    timeStampList: timeStampList,
+    timeline: timeline,
+    gap: gap,
+  };
 };
 
 // Create option for line chart
@@ -137,9 +177,16 @@ export const createOptionForLineChart = (
   title,
   subTitle
 ) => {
+  const breakPoint = chartData?.timeStampList?.length;
+  console.log({ chartData });
   return {
     chart: {
       zoomType: "x",
+      resetZoomButton: {
+        position: {
+          y: -30,
+        },
+      },
     },
     title: {
       text: title,
@@ -156,13 +203,32 @@ export const createOptionForLineChart = (
     },
 
     xAxis: {
-      categories: chartData.timeline,
+      // type: chartData.gap < 30 ? "datetime" : "category",
+      // categories: chartData.gap < 30 ? "" : chartData.timeline,
+      type: "datetime",
       accessibility: {
-        rangeDescription: "As of today",
+        // rangeDescription: "As of today",
       },
-      title: {
-        text: "Day",
-      },
+      offset: 10,
+      startOnTick: false,
+      minPadding: 0.01,
+      tickPixelInterval: 30,
+      endOnTick: true,
+
+      plotLines: [
+        {
+          label: {
+            formatter: function () {
+              const { timeStampList } = chartData;
+              const endDate = moment(+timeStampList[breakPoint - 1]).format("LL");
+              return "Update to: " + endDate;
+            },
+          },
+          value: +chartData?.timeStampList[breakPoint - 1],
+          color: "red",
+          zIndex: 1,
+        },
+      ],
     },
 
     legend: {
@@ -170,28 +236,45 @@ export const createOptionForLineChart = (
       align: "right",
       verticalAlign: "bottom",
     },
+    tooltip: {
+      shared: true,
+    },
 
     plotOptions: {
       series: {
         label: {
           connectorAllowed: false,
         },
+        // pointStart: chartData.gap < 30 ? chartData?.timeStampList[0] : undefined,
+        // pointInterval:
+        //   chartData.gap < 30 ? 60 * 60 * 24 * 1000 * chartData?.gap : undefined,
+        pointStart: +chartData?.timeStampList[0],
+        pointInterval: 60 * 60 * 24 * 1000 * chartData?.gap,
+        zoneAxis: "x",
+        zones: [
+          {
+            value: +chartData?.timeStampList[breakPoint - 1],
+          },
+          {
+            dashStyle: "dot",
+          },
+        ],
       },
     },
 
     series: [
       {
         name: "Cases",
-        data: chartData.cases,
+        data: chartData?.cases,
       },
       {
         name: "Death",
-        data: chartData.deaths,
+        data: chartData?.deaths,
         color: "red",
       },
       {
         name: "Recovered",
-        data: chartData.recovered,
+        data: chartData?.recovered,
       },
     ],
   };
@@ -202,7 +285,6 @@ export const countNumberOfDay = (dateFrom = "01-11-2019", dateTo = "") => {
   const pastDate = moment(dateFrom, "DD-MM-YYYY");
   if (!dateTo) {
     const today = moment();
-    // const days = today.diff(pastDate, "days");
     return today.diff(pastDate, "days");
   }
   const dateCount = moment(dateTo, "DD-MM-YYYY");
@@ -236,21 +318,23 @@ export const createOptionForBarChart = (
       text: subTitle,
     },
     xAxis: {
+      categories: [""],
       title: {
         text: "Continent",
+      },
+      labels: {
+        enabled: false,
       },
     },
 
     yAxis: {
       title: {
-        text: "Total cases",
-        align: "high",
+        enabled: false,
       },
       labels: {
         overflow: "justify",
       },
     },
-    tooltip: {},
     plotOptions: {
       bar: {
         groupPadding: 0.1,
@@ -260,12 +344,9 @@ export const createOptionForBarChart = (
       },
     },
     legend: {
-      layout: "vertical",
-      align: "right",
+      layout: "horizontal",
+      align: "center",
       verticalAlign: "bottom",
-      x: 0,
-      y: -40,
-      floating: true,
       borderWidth: 1,
       backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || "#FFFFFF",
       shadow: true,
@@ -273,6 +354,7 @@ export const createOptionForBarChart = (
     credits: {
       enabled: false,
     },
+
     series: chartData,
   };
 };

@@ -20,7 +20,8 @@
     "recovered":"Recovered"
   },
   "home": {
-    "title":"Hello <1>{{summaryData.deaths}}</1>, you have <3>{{summaryData.dateUpdated}}</3> unread message. <5>Go to message</5>.",
+    "title":"Globally, as of <1>{{updatedAt}}</1>, there have been <3>{{cases}}</3> confirmed cases of COVID-19, including <5>{{deaths}}</5> deaths, <7>{{recovered}}</7> recovered reported to WHO",
+    "dateUpdate":"{{updateAt}}",
     "covidCase":"total cases",
     "titleLineChart":"Detail timeline of covid cases ",
     "subTitleChart":"As of present",
@@ -29,5 +30,9 @@
 
   },
    
-  "homeDetail": {}
+  "homeDetail": {},
+  "error":{
+   "failLoadingMap":"Fail to load data of map",
+   "failLoadingData":"Fail to load data of chart"
+  }
 }

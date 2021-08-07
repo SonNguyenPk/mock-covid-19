@@ -9,9 +9,9 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 const transformDataMapToTable = (data) => {
-  if (data.length) {
+  if (data?.length) {
     const tableData = [];
-    for (let i = 0; i < data.length; ++i) {
+    for (let i = 0; i < data?.length; ++i) {
       tableData.push(
         _.set(
           _.pick(data[i], ["country", "cases", "deaths", "recovered", "countryInfo"]),
@@ -95,7 +95,7 @@ QuickSearchToolbar.propTypes = {
   value: PropTypes.string,
 };
 
-export default function TableCountriesCovid({ countriesData }) {
+function TableCountriesCovid({ countriesData }) {
   const history = useHistory();
   const [searchResult, setSearchResult] = useState([]);
   const [t] = useTranslation();
@@ -175,8 +175,10 @@ export default function TableCountriesCovid({ countriesData }) {
           },
         ]}
         onRowClick={(params) => handleSelectRow(params)}
-        rows={searchResult.length > 0 ? searchResult : dataTable}
+        rows={searchResult?.length > 0 ? searchResult : dataTable}
       />
     </div>
   );
 }
+
+export default TableCountriesCovid;
