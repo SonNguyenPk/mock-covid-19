@@ -99,7 +99,7 @@ function CountryDetail() {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={12} style={{ minHeight: "200px" }}>
+            <Grid item xs={12} style={{ minHeight: "400px" }}>
               {isError && <Typography> {t("error.failLoadingData")}</Typography>}
               {countryDataTimeline && (
                 <ButtonGroup onChangeShowType={handleChangeShowTimelyLineChart} />
