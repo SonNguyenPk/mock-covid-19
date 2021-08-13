@@ -12,6 +12,7 @@
     "login_remember": "Ghi nhớ tài khoản",
     "login_forgetPassword": "Quên mật khẩu?",
     "login_haveAccount": "Đã có tài khoản, đi tới trang đăng nhập",
+    "backToNews":"Quay lại trang tin tức",
     "signup_haveAccount": "Bạn đã có tài khoản rồi, Đăng nhập?",
     "signup_checkBox": "Tôi muốn nhận thông tin qua mail",
     "country": "Quốc gia",
@@ -27,7 +28,9 @@
     "titleBarChart": "Số ca nhiễm covid theo từng Châu lục",
     "tableTitle": "Chi tiết thông kê theo từng nước"
   },
-  "homeDetail": {},
+  "homeDetail": {
+    "title": "Ở <1>{{country}}</1>, tính đến ngày <3>{{updatedAt}}</3>, đã có <5>{{cases}}</5> ca dương tính với covid-19, trong đó: <7>{{deaths}}</7> ca tử vong, <9>{{recovered}}</9> ca hồi phục được báo cáo tới WHO"
+  },
   "error":{
     "failLoadingMap":"Lỗi tải dữ liệu bản đồ",
     "failLoadingData":"Lỗi tải dữ liệu"

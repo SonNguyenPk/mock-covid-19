@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 function NavigationBar(props) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
 
   const handleCheckLogin = () => {
     if (!checkLogin()) {

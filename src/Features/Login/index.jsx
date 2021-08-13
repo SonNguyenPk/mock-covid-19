@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Input } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -9,24 +10,29 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { AccessibilityNew } from "@material-ui/icons";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import InputTextField from "Components/FormFields/inputTextField";
+import Loading from "Components/Loading";
 import { router } from "Constants/constants";
 import { useSnackbar } from "notistack";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
 
 function Copyright() {
+  const [t] = useTranslation();
   return (
     <Box>
       <Typography variant="body2" color="textSecondary" align="center">
         {"Copyright © "}
         {new Date().getFullYear()}
       </Typography>
-      <Link to={router.news}>Back to news</Link>
+      <Link to={router.news} style={{ textDecoration: "none", color: "white" }}>
+        {t("common.backToNews")}
+      </Link>
     </Box>
   );
 }
@@ -78,6 +84,7 @@ const schema = yup.object().shape({
 export default function LoginPage() {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const [isLoading, setIsLoading] = useState(false);
   const [t] = useTranslation();
   const form = useForm({
     mode: "onSubmit",
@@ -86,7 +93,9 @@ export default function LoginPage() {
   });
 
   const handleSubmitLogin = async (data) => {
+    setIsLoading(true);
     window.localStorage.setItem("user", JSON.stringify(data));
+
     enqueueSnackbar("Login successfully", {
       variant: "success",
       preventDuplicate: true,
@@ -115,15 +124,15 @@ export default function LoginPage() {
               control={<Checkbox value="remember" color="primary" />}
               label={t("common.login_remember")}
             />
-            <Button
+            <Input
               type="submit"
               fullWidth
-              variant="contained"
+              // variant="contained"
               color="primary"
               className={classes.submit}
             >
               {t("common.login")}
-            </Button>
+            </Input>
             <Grid container>
               <Grid item xs>
                 <Link to={router.register}>{t("common.login_forgotPassword")}</Link>

@@ -23,10 +23,24 @@ function App() {
     palette: {
       type: globalState.themeMode,
     },
+    overrides: {
+      MuiCssBaseline: {
+        "@global": {
+          "*": {
+            "scrollbar-width": "thin",
+          },
+          "*::-webkit-scrollbar": {
+            width: "4px",
+            height: "4px",
+          },
+        },
+      },
+    },
   });
 
   useEffect(() => {
     i18n.changeLanguage(globalState.language);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalState]);
 
   return (
@@ -36,7 +50,7 @@ function App() {
           <PrivateRoute exact path={router.home} component={HomePage} />
           <Route path={router.news} component={NewsPage} />
           <PrivateRoute
-            path={`${router.homeDetail}/:country`}
+            path={`${router.homeDetail}/:countryID`}
             component={CountryDetail}
           />
           <Route path={`${router.news}/:id`} component={NewsDetail} />

@@ -1,6 +1,5 @@
 import HighchartsReact from "highcharts-react-official";
-// import Highcharts from "highcharts/highstock";
-// import Highcharts from "highcharts";
+import Highcharts from "highcharts";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -10,7 +9,6 @@ BarChartCovid.propTypes = {};
 
 function BarChartCovid({ continentsData }) {
   const [option, setOption] = useState({});
-  const [highCharts, setHighCharts] = useState();
   const globalState = useSelector((state) => state.global);
   const [t] = useTranslation();
 
@@ -20,11 +18,8 @@ function BarChartCovid({ continentsData }) {
   useEffect(() => {
     (async () => {
       try {
-        const response = await import("highcharts");
-        const highCharts = response.default;
-        setHighCharts(highCharts);
         const options = createOptionForBarChart(
-          highCharts,
+          Highcharts,
           continentsData,
           title,
           subTitle
@@ -32,9 +27,9 @@ function BarChartCovid({ continentsData }) {
         setOption(options);
       } catch (error) {}
     })();
-  }, [continentsData, globalState.themeMode]);
+  }, [continentsData, globalState.themeMode, title, subTitle]);
 
-  return <HighchartsReact highcharts={highCharts} options={option} immutable />;
+  return <HighchartsReact highcharts={Highcharts} options={option} immutable />;
 }
 
 export default React.memo(BarChartCovid);
