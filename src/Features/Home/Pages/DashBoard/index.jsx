@@ -1,4 +1,4 @@
-import { Container, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Container, Grid, Typography } from "@material-ui/core";
 import { covidApi } from "Api/covidApi";
 import MainLayout from "Components/Layouts";
 import BarChartCovid from "Features/Home/Components/BarChart";
@@ -90,10 +90,12 @@ function HomePage(props) {
   // data of world map and table
   const getAllCountryData = async () => {
     try {
+      setIsLoading(true);
       const data = await covidApi.getAllCountry();
       const mapData = transformToMapData(data);
       setMapData(mapData);
       setCountriesData(data);
+      setIsLoading(false);
     } catch (error) {
       console.log({ error });
     }
@@ -118,7 +120,7 @@ function HomePage(props) {
       <Container>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <WorldMap countriesData={mapData} />
+            <WorldMap countriesData={mapData} isLoading={isLoading} />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h5">

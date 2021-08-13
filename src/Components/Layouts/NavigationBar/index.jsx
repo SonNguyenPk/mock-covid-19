@@ -4,8 +4,7 @@ import WhatshotIcon from "@material-ui/icons/Whatshot";
 import { router } from "Constants/constants";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { NavLink, useHistory } from "react-router-dom";
-import { checkLogin } from "Utilise/utilise";
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   appBarNavigation: {
@@ -25,19 +24,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavigationBar(props) {
+function NavigationBar({ onMoveToHome }) {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  const handleCheckLogin = () => {
-    if (!checkLogin()) {
-      alert("you must login to see Home page");
+  const handleCheckLogin = (e) => {
+    if (onMoveToHome) {
+      onMoveToHome(e);
     }
   };
   return (
     <Box className={classes.appBarNavigation}>
       <NavLink exact to={router.home}>
-        <Button onClick={handleCheckLogin} startIcon={<HomeOutlinedIcon />}>
+        <Button onClick={(e) => handleCheckLogin(e)} startIcon={<HomeOutlinedIcon />}>
           {t("common.home")}
         </Button>
       </NavLink>

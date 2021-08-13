@@ -2,7 +2,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -10,10 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { AccessibilityNew } from "@material-ui/icons";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import InputTextField from "Components/FormFields/inputTextField";
-import Loading from "Components/Loading";
 import { router } from "Constants/constants";
 import { useSnackbar } from "notistack";
 import React, { useState } from "react";
@@ -21,16 +18,18 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
+import Loading from "Components/Loading";
 
 function Copyright() {
   const [t] = useTranslation();
+  const classes = useStyles();
   return (
     <Box>
       <Typography variant="body2" color="textSecondary" align="center">
         {"Copyright © "}
         {new Date().getFullYear()}
       </Typography>
-      <Link to={router.news} style={{ textDecoration: "none", color: "white" }}>
+      <Link className={classes.link} to={router.news}>
         {t("common.backToNews")}
       </Link>
     </Box>
@@ -65,6 +64,13 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: "blue",
+    color: "white",
+    borderRadius: "4px",
+  },
+  link: {
+    textDecoration: "none",
+    color: theme.palette.text.primary,
   },
 }));
 const initialValues = { email: "", password: "" };
@@ -94,18 +100,29 @@ export default function LoginPage() {
 
   const handleSubmitLogin = async (data) => {
     setIsLoading(true);
-    window.localStorage.setItem("user", JSON.stringify(data));
-
-    enqueueSnackbar("Login successfully", {
-      variant: "success",
-      preventDuplicate: true,
-    });
-    history.push(router.home);
+    if (data.password !== "covid19") {
+      enqueueSnackbar("Password incorrect", {
+        variant: "error",
+        preventDuplicate: true,
+      });
+      setIsLoading(false);
+      return;
+    }
+    setTimeout(() => {
+      window.localStorage.setItem("user", JSON.stringify(data));
+      enqueueSnackbar("Login successfully", {
+        variant: "success",
+        preventDuplicate: true,
+      });
+      setIsLoading(false);
+      history.push(router.home);
+    }, 1000);
   };
 
   const classes = useStyles();
   return (
     <Grid container component="main" className={classes.root}>
+      {isLoading && <Loading />}
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -135,10 +152,14 @@ export default function LoginPage() {
             </Input>
             <Grid container>
               <Grid item xs>
-                <Link to={router.register}>{t("common.login_forgotPassword")}</Link>
+                <Link to={router.register} className={classes.link}>
+                  {t("common.login_forgotPassword")}
+                </Link>
               </Grid>
               <Grid item>
-                <Link to={router.register}>{t("common.login_haveAccount")}</Link>
+                <Link to={router.register} className={classes.link}>
+                  {t("common.login_haveAccount")}
+                </Link>
               </Grid>
             </Grid>
             <Box mt={5}>

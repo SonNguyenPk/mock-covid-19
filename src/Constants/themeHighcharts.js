@@ -117,11 +117,13 @@ export const defaultTheme = {
     },
   },
   title: {
+    text: "",
     style: {
       color: "#333333",
     },
   },
   subtitle: {
+    text: "",
     style: {
       color: "#333333",
     },

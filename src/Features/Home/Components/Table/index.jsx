@@ -49,6 +49,7 @@ const useStyles = makeStyles(
         },
       },
     },
+
     [theme.breakpoints.up("sm")]: {
       countryFlag: {
         display: "block",
@@ -106,6 +107,7 @@ function TableCountriesCovid({ countriesData }) {
   );
 
   const debounce = _.debounce((value) => requestSearch(value), 200);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback((value) => debounce(value), [searchResult]);
 
   const requestSearch = (value) => {
@@ -121,7 +123,7 @@ function TableCountriesCovid({ countriesData }) {
   const classes = useStyles();
 
   return (
-    <div style={{ height: "80vh", minWidth: "100%" }}>
+    <div style={{ height: "80vh", minWidth: "100%" }} className={classes.table}>
       <DataGrid
         components={{
           Toolbar: QuickSearchToolbar,
@@ -161,7 +163,7 @@ function TableCountriesCovid({ countriesData }) {
             headerName: `${t("common.cases")}`,
             flex: 0.5,
             disableColumnMenu: true,
-            minWidth: 100,
+            minWidth: 125,
           },
           {
             type: "number",
@@ -169,7 +171,7 @@ function TableCountriesCovid({ countriesData }) {
             headerName: `${t("common.deaths")}`,
             flex: 0.5,
             disableColumnMenu: true,
-            minWidth: 150,
+            minWidth: 125,
           },
           {
             type: "number",
@@ -177,7 +179,7 @@ function TableCountriesCovid({ countriesData }) {
             headerName: `${t("common.recovered")}`,
             flex: 0.5,
             disableColumnMenu: true,
-            minWidth: 150,
+            minWidth: 125,
           },
         ]}
         onRowClick={(params) => handleSelectRow(params)}

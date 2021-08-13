@@ -10,10 +10,10 @@ import React from "react";
 const useStyles = makeStyles({
   root: {
     maxWidth: "100%",
-    height: 300,
+    height: 350,
   },
   cardContent: {
-    height: 110,
+    height: 210,
   },
 });
 
@@ -33,7 +33,6 @@ export default function NewsCardItem({ news }) {
         <CardContent className={classes.cardContent}>
           <Typography gutterBottom variant="h5" component="h2">
             {news.title}
-            {news.name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             {_.truncate(news.description, { length: 140, separator: "" })}

@@ -31,7 +31,7 @@ export const covidApi = {
 
 export const newsApi = {
   getAllNews(params) {
-    const url = "/everything";
+    const url = "/articles";
     return axiosClientNews.get(url, { params });
   },
   getAllHotNews(params) {

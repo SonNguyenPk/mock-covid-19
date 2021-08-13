@@ -13,6 +13,9 @@ import HomeIcon from "@material-ui/icons/Home";
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import { router } from "Constants/constants";
+import { darkTheme, defaultTheme } from "Constants/themeHighcharts";
+import Highcharts from "highcharts";
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,8 +24,6 @@ import { globalActions } from "Redux/rootAction";
 import { checkLogin } from "Utilise/utilise";
 import NavigationBar from "./NavigationBar";
 import SelectionLanguage from "./SelectionLanguage";
-import Highcharts from "highcharts";
-import { darkTheme, defaultTheme } from "Constants/themeHighcharts";
 
 const drawerWidth = "100vw";
 
@@ -154,8 +155,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainLayout(props) {
   const [open, setOpen] = useState(false);
-
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
   const globalState = useSelector((state) => state.global);
   const dispatch = useDispatch();
@@ -205,6 +206,20 @@ export default function MainLayout(props) {
     history.push(`${router.news}`);
   };
 
+  const handleCheckLogin = (e) => {
+    if (!checkLogin()) {
+      e.preventDefault();
+      enqueueSnackbar("you must login to see Home page", {
+        variant: "warning",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 1000,
+      });
+    }
+  };
+
   const classes = useStyles();
   const theme = useTheme();
 
@@ -228,7 +243,11 @@ export default function MainLayout(props) {
               <MenuIcon />
             </IconButton>
             <Link to={router.home}>
-              <IconButton className={classes.appBarHomeButton} aria-label="Home">
+              <IconButton
+                className={classes.appBarHomeButton}
+                aria-label="Home"
+                onClick={(e) => handleCheckLogin(e)}
+              >
                 <HomeIcon />
               </IconButton>
             </Link>
@@ -237,7 +256,7 @@ export default function MainLayout(props) {
               Covid-19
             </Typography>
             <div className={classes.appBarNavigation}>
-              <NavigationBar />
+              <NavigationBar onMoveToHome={handleCheckLogin} />
             </div>
 
             <div className={classes.grow}></div>
@@ -294,7 +313,7 @@ export default function MainLayout(props) {
           </div>
           <Divider />
           <Box className={classes.navigationBarMobile}>
-            <NavigationBar />
+            <NavigationBar onMoveToHome={handleCheckLogin} />
           </Box>
           <Divider />
           <Box mt="1rem">
