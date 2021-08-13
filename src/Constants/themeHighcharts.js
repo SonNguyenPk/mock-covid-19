@@ -15,11 +15,12 @@ export const defaultTheme = {
     borderWidth: 0,
     backgroundColor: "#ffffff",
     borderColor: "#335cad",
-    styleMode: true,
+    // styleMode: true,
     style: {
       fontFamily:
         '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
       fontSize: "12px",
+      maxWidth: "100%",
     },
   },
   tooltip: {
@@ -115,7 +116,16 @@ export const defaultTheme = {
       color: "#333333",
     },
   },
-  title: { color: "#CCCCCC", fontSize: "18px" },
+  title: {
+    style: {
+      color: "#333333",
+    },
+  },
+  subtitle: {
+    style: {
+      color: "#333333",
+    },
+  },
 
   navigation: {
     activeColor: "#003399",
@@ -155,20 +165,17 @@ export const darkTheme = {
         [1, "#3e3e40"],
       ],
     },
-
     plotBorderColor: "#606063",
   },
   title: {
     style: {
       color: "#E0E0E3",
-      //   textTransform: "uppercase",
       fontSize: "18px",
     },
   },
   subtitle: {
     style: {
       color: "#E0E0E3",
-      //   textTransform: "uppercase",
     },
   },
   xAxis: {
@@ -190,7 +197,7 @@ export const darkTheme = {
       {
         label: {
           style: {
-            color: "#A0A0A3",
+            color: "#E0E0E3",
           },
         },
       },

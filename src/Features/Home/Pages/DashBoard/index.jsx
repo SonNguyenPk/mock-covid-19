@@ -1,7 +1,8 @@
-import { Container, Grid, Typography } from "@material-ui/core";
+import { Container, Grid, makeStyles, Typography } from "@material-ui/core";
 import { covidApi } from "Api/covidApi";
 import MainLayout from "Components/Layouts";
 import BarChartCovid from "Features/Home/Components/BarChart";
+import ButtonGroup from "Features/Home/Components/ButtonGroup";
 import LineChartCovid from "Features/Home/Components/LineChart";
 import WorldMap from "Features/Home/Components/Map";
 import TableCountriesCovid from "Features/Home/Components/Table";
@@ -15,8 +16,6 @@ import {
   transformDataMapToChart,
   transformToMapData,
 } from "Utilise/utilise";
-// import Highcharts from "highcharts";
-// import { darkTheme, defaultTheme } from "Constants/themeHighcharts";
 
 HomePage.propTypes = {};
 
@@ -45,34 +44,18 @@ function HomePage(props) {
   const [mapData, setMapData] = useState();
   const [summaryData, setSummaryData] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [filters, setFilters] = useState();
+  const [timeGap, setTimeGap] = useState(1);
   const [t] = useTranslation();
   const globalState = useSelector((state) => state.global);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => getSummaryOfWorldData(), [globalState]);
   useEffect(() => getContinentsData(), []);
-  useEffect(() => getTimeLineData(), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => getTimeLineData(), [timeGap]);
   useEffect(() => getAllCountryData(), []);
 
-  //change theme darkmode
-  // useEffect(() => {
-  //   (() => {
-  //     setIsLoading(true);
-  //     if (globalState.themeMode === "dark") {
-  //       Highcharts.theme = darkTheme;
-  //       // DarkBlue(Highcharts);
-  //       Highcharts.setOptions(Highcharts.theme);
-
-  //     }
-  //     if (globalState.themeMode === "light") {
-  //       Highcharts.theme = defaultTheme;
-  //       Highcharts.setOptions(Highcharts.theme);
-  //     }
-  //     setIsLoading(false);
-  //   })();
-  // }, [globalState.themeMode]);
-
-  // data to fill title
+  // data to fill in title
   const getSummaryOfWorldData = async () => {
     try {
       const summaryWorldData = await covidApi.getSummary();
@@ -94,13 +77,14 @@ function HomePage(props) {
   const getTimeLineData = async () => {
     try {
       const numberOfDayFromToday = countNumberOfDay();
-      const newFilters = { lastdays: numberOfDayFromToday };
-      setFilters(newFilters);
-
-      const timelineData = await covidApi.getTimelineOfWorld(newFilters);
-      const dataMapToChart = transformDataMapToChart(timelineData);
+      const timelineData = await covidApi.getTimelineOfWorld({
+        lastdays: numberOfDayFromToday,
+      });
+      const dataMapToChart = transformDataMapToChart(timelineData, timeGap);
       setTimelineData(dataMapToChart);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // data of world map and table
@@ -125,23 +109,29 @@ function HomePage(props) {
     }
   };
 
+  const handleChangeShowTimelyLineChart = (value) => {
+    setTimeGap(value);
+  };
+
   return (
     <MainLayout>
       <Container>
-        <Grid container>
+        <Grid container spacing={1}>
           <Grid item xs={12}>
             <WorldMap countriesData={mapData} />
           </Grid>
-
           <Grid item xs={12}>
             <Typography variant="h5">
               {summaryData && <HomeTitle summaryData={summaryData} />}
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={5} style={{ marginTop: "38.4px" }}>
             {continentsData && <BarChartCovid continentsData={continentsData} />}
           </Grid>
           <Grid item xs={12} sm={7}>
+            {timelineData && (
+              <ButtonGroup onChangeShowType={handleChangeShowTimelyLineChart} />
+            )}
             {timelineData && <LineChartCovid timelineData={timelineData} />}
           </Grid>
           <Grid item xs={12}>

@@ -4,7 +4,7 @@ import { Autocomplete } from "@material-ui/lab";
 import { router } from "Constants/constants";
 import _ from "lodash";
 import PropTypes from "prop-types";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -137,7 +137,7 @@ function TableCountriesCovid({ countriesData }) {
             disableColumnMenu: true,
             field: "country",
             headerName: `${t("common.country")}`,
-            minWidth: 50,
+            minWidth: 175,
             flex: 1,
             renderCell: (params) => (
               <Box
@@ -156,22 +156,28 @@ function TableCountriesCovid({ countriesData }) {
             ),
           },
           {
+            type: "number",
             field: "cases",
             headerName: `${t("common.cases")}`,
             flex: 0.5,
             disableColumnMenu: true,
+            minWidth: 100,
           },
           {
+            type: "number",
             field: "deaths",
             headerName: `${t("common.deaths")}`,
             flex: 0.5,
             disableColumnMenu: true,
+            minWidth: 150,
           },
           {
+            type: "number",
             field: "recovered",
             headerName: `${t("common.recovered")}`,
             flex: 0.5,
             disableColumnMenu: true,
+            minWidth: 150,
           },
         ]}
         onRowClick={(params) => handleSelectRow(params)}

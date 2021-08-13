@@ -1,5 +1,4 @@
 import map from "@highcharts/map-collection/custom/world.geo.json";
-import { darkTheme } from "Constants/themeHighcharts";
 // Import Highcharts
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
@@ -8,21 +7,21 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { createOptionForMap } from "Utilise/utilise";
 
-// HighchartsMap(Highcharts);
+HighchartsMap(Highcharts);
 
 const WorldMap = ({ countriesData, isLoading }) => {
   const [option, setOption] = useState({});
-  const [highCharts, setHighCharts] = useState();
+  // const [highCharts, setHighCharts] = useState();
   const globalState = useSelector((state) => state.global);
 
   useEffect(() => {
     (async () => {
       try {
-        const response = await import("highcharts");
-        const highCharts = response.default;
-        console.log({ highCharts });
-        HighchartsMap(highCharts);
-        setHighCharts(highCharts);
+        // const response = await import("highcharts");
+        // const highCharts = response.default;
+        // console.log({ highCharts });
+        // HighchartsMap(highCharts);
+        // setHighCharts(highCharts);
 
         const options = createOptionForMap(
           map,
@@ -37,7 +36,7 @@ const WorldMap = ({ countriesData, isLoading }) => {
   }, [countriesData, globalState.themeMode]);
   return (
     <HighchartsReact
-      highcharts={highCharts}
+      highcharts={Highcharts}
       options={option}
       constructorType={"mapChart"}
       immutable

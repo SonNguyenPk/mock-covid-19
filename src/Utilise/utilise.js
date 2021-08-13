@@ -171,12 +171,7 @@ export const transformDataMapToChart = (data, gap = 1) => {
 };
 
 // Create option for line chart
-export const createOptionForLineChart = (
-  Highcharts = null,
-  chartData,
-  title,
-  subTitle
-) => {
+export const createOptionForLineChart = (chartData, title, subTitle) => {
   const breakPoint = chartData?.timeStampList?.length;
   console.log({ chartData });
   return {
@@ -223,6 +218,7 @@ export const createOptionForLineChart = (
               const endDate = moment(+timeStampList[breakPoint - 1]).format("LL");
               return "Update to: " + endDate;
             },
+            style: { color: "red" },
           },
           value: +chartData?.timeStampList[breakPoint - 1],
           color: "red",
@@ -347,8 +343,6 @@ export const createOptionForBarChart = (
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
-      borderWidth: 1,
-      backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || "#FFFFFF",
       shadow: true,
     },
     credits: {

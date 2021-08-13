@@ -1,37 +1,60 @@
 import { Container, Grid, Typography } from "@material-ui/core";
 import { covidApi } from "Api/covidApi";
 import MainLayout from "Components/Layouts";
+import ButtonGroup from "Features/Home/Components/ButtonGroup";
 import CountryMap from "Features/Home/Components/CountryMap";
 import LineChartCovid from "Features/Home/Components/LineChart";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { countNumberOfDay, transformDataMapToChart } from "Utilise/utilise";
 
 CountryDetail.propTypes = {};
 
-function CountryDetail(props) {
-  const { country } = useParams();
+function CountryTitle({ countrySummary }) {
+  const { updatedAt, cases, deaths, recovered, country } = countrySummary;
+  const [t] = useTranslation();
+
+  return (
+    <>
+      <Trans i18nKey="homeDetail.title" t={t}>
+        In <strong>{{ country }}</strong>, as of
+        <strong style={{ color: "green" }}>{{ updatedAt }}</strong>, there have been
+        <strong style={{ color: "blue" }}>{{ cases }}</strong> confirmed cases of
+        COVID-19, including <strong style={{ color: "red" }}>{{ deaths }}</strong> deaths,
+        <strong style={{ color: "blue" }}>{{ recovered }}</strong> recovered reported to
+        WHO
+      </Trans>
+    </>
+  );
+}
+
+function CountryDetail() {
   const [countryDataTimeline, setCountryDataTimeline] = useState();
   const [countrySummary, setCountrySummary] = useState();
   const [isError, setIsError] = useState(false);
+  const [timeGap, setTimeGap] = useState(1);
+  const globalState = useSelector((state) => state.global);
   const [t] = useTranslation();
+  const { countryID } = useParams();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => getCountryDetail(), [timeGap]);
 
   useEffect(() => {
-    getCountryDetail(country);
-  }, [country]);
-
-  useEffect(() => {
-    getCountrySummary(country);
-  }, [country]);
+    getCountrySummary(countryID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countryID]);
 
   const getCountryDetail = async () => {
     try {
       const numberOfDay = countNumberOfDay();
-      const timelineData = await covidApi.getByCountry(country, {
+      const timelineData = await covidApi.getByCountry(countryID, {
         lastdays: numberOfDay,
       });
-      const dataMapToChart = transformDataMapToChart(timelineData.timeline);
+      const dataMapToChart = transformDataMapToChart(timelineData.timeline, timeGap);
       setCountryDataTimeline(dataMapToChart);
     } catch (error) {
       setIsError(true);
@@ -40,11 +63,26 @@ function CountryDetail(props) {
 
   const getCountrySummary = async (country) => {
     try {
-      const summaryData = await covidApi.getSummaryOfCountry(country);
-      setCountrySummary(summaryData);
+      const summaryData = await covidApi.getSummaryOfCountry(countryID);
+      const { updated, cases, deaths, recovered, country } = summaryData;
+      console.log({ summaryData });
+      setCountrySummary({
+        country: country,
+        updatedAt:
+          globalState.language === "en"
+            ? moment(updated).format("LL")
+            : moment(updated).format("DD/MM/YYYY"),
+        cases: new Intl.NumberFormat().format(+cases),
+        deaths: new Intl.NumberFormat().format(+deaths),
+        recovered: new Intl.NumberFormat().format(+recovered),
+      });
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleChangeShowTimelyLineChart = (value) => {
+    setTimeGap(value);
   };
   return (
     <div>
@@ -52,18 +90,20 @@ function CountryDetail(props) {
         <Container>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <CountryMap countriesData={countrySummary} />
+              {countryID && <CountryMap countryID={countryID} />}
             </Grid>
             <Grid item xs={12}>
-              {/* <Typography>
-                ` In Russian Federation, from 3 January 2020 to 6:17pm CEST, 29 July 2021,
-                there have been 6,195,232 confirmed cases of COVID-19 with 156,178 deaths,
-                reported to WHO. As of 24 July 2021, a total of 52,782,888 vaccine doses
-                have been administered.`
-              </Typography> */}
+              {countrySummary && (
+                <Typography variant="h5">
+                  <CountryTitle countrySummary={countrySummary} />
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12}>
               {isError && <Typography> {t("error.failLoadingData")}</Typography>}
+              {countryDataTimeline && (
+                <ButtonGroup onChangeShowType={handleChangeShowTimelyLineChart} />
+              )}
               {countryDataTimeline && (
                 <LineChartCovid timelineData={countryDataTimeline} />
               )}
