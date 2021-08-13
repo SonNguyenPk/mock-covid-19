@@ -131,7 +131,6 @@ export const transformDataMapToChart = (data, gap = 1) => {
   if (gap > 1) {
     const dataLength = dataCases.length;
     const z = (dataLength - 1) % gap;
-    console.log({ z, dataLength, gap });
     const dataCasesSortedByGap = [];
     const dataDeathsSortedByGap = [];
     const dataRecoveredSortedByGap = [];
@@ -144,7 +143,6 @@ export const transformDataMapToChart = (data, gap = 1) => {
       timelineSortedByGap.push(timeline[i]);
     }
     if (z) {
-      console.log({ z });
       dataCasesSortedByGap.push(dataCases[dataLength - 1]);
       dataDeathsSortedByGap.push(dataDeaths[dataLength - 1]);
       dataRecoveredSortedByGap.push(dataRecovered[dataLength - 1]);
@@ -173,7 +171,6 @@ export const transformDataMapToChart = (data, gap = 1) => {
 // Create option for line chart
 export const createOptionForLineChart = (chartData, title, subTitle) => {
   const breakPoint = chartData?.timeStampList?.length;
-  console.log({ chartData });
   return {
     chart: {
       zoomType: "x",
@@ -288,12 +285,10 @@ export const countNumberOfDay = (dateFrom = "01-11-2019", dateTo = "") => {
 };
 
 export const filterContinentDataMapToChart = (data) => {
-  console.log({ data });
   const continentList = [];
   for (let i = 0; i < data.length; i++) {
     continentList.push({ name: data[i].continent, data: [data[i].cases] });
   }
-  console.log({ continentList });
   return continentList;
 };
 

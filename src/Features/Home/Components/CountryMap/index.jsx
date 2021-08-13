@@ -1,5 +1,6 @@
 // Import Highcharts
-import { Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
+import Loading from "Components/Loading";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import HighchartsMap from "highcharts/modules/map";
@@ -14,12 +15,14 @@ HighchartsMap(Highcharts);
 const CountryMap = ({ countryID }) => {
   const [option, setOption] = useState({});
   const globalState = useSelector((state) => state.global);
+  const [isLoading, setIsLoading] = useState();
   const [isError, setIsError] = useState(false);
   const [t] = useTranslation();
 
   useEffect(() => {
     (async () => {
       try {
+        setIsLoading(true);
         const id = _.lowerCase(countryID);
         const mapImported = await import(
           `@highcharts/map-collection/countries/${id}/${id}-all.geo.json`
@@ -27,6 +30,7 @@ const CountryMap = ({ countryID }) => {
         const mapData = mapImported.default;
         const options = createOptionForMap(mapData, null, "", "", "noShowLegend");
         setOption(options);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
         setIsError(true);
@@ -36,6 +40,11 @@ const CountryMap = ({ countryID }) => {
 
   return (
     <>
+      {isLoading && (
+        <Box height="50vh" width="100%">
+          <Loading />
+        </Box>
+      )}
       {isError ? (
         <Typography>{t("error.failLoadingMap")}</Typography>
       ) : (

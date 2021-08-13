@@ -86,7 +86,7 @@ export default function SignUp() {
     i18n.changeLanguage(value);
   };
   const handleRegister = (data) => {
-    JSON.stringify(window.localStorage.setItem("user"));
+    JSON.stringify(window.localStorage.setItem("user", data));
     enqueueSnackbar("Login successfully", {
       variant: "success",
       preventDuplicate: true,

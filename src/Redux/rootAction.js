@@ -1,2 +1,4 @@
 import { globalActions } from "./Slices/globalSlice";
-export { globalActions };
+import { newsActions } from "./Slices/newsSlice";
+
+export { globalActions, newsActions };

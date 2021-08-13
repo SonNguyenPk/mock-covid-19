@@ -1,33 +1,42 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import MainLayout from "Components/Layouts";
-import TabBarNews from "Features/News/Components/TabBarNews";
-import { Container, Divider, Grid } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Container,
+  Divider,
+  Grid,
+} from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import { newsApi } from "Api/covidApi";
+import MainLayout from "Components/Layouts";
+import { router } from "Constants/constants";
 import NewsCardItem from "Features/News/Components/NewsCardItem";
-import _ from "lodash";
+import TabBarNews from "Features/News/Components/TabBarNews";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { newsActions } from "Redux/rootAction";
 
-NewsPage.propTypes = {};
-
-const initialFilters = {
-  country: "us",
-  category: "business",
-  apiKey: "fa903974bd1c4272b874264bd743e3ef",
-};
+const initialFilters = {};
 
 function NewsPage(props) {
   const [newsList, setNewsList] = useState(null);
   const [filters, setFilters] = useState(initialFilters);
+  const [isLoading, setIsLoading] = useState();
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
-    getNewsList(filters);
+    getNewsList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
-  const getNewsList = async (filters) => {
+  const getNewsList = async () => {
     try {
-      const newsList = await newsApi.getAllHotNews(filters);
-      setNewsList(newsList.sources);
-      console.log({ newsList });
+      setIsLoading(true);
+      const newsList = await newsApi.getAllNews(filters);
+      setNewsList(newsList);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -36,18 +45,50 @@ function NewsPage(props) {
     setFilters({ ...filters, category: category });
   };
 
+  const handleSelectNews = (e, news, index) => {
+    const action = newsActions.selectNews(news);
+    dispatch(action);
+    history.push(`${router.newsDetail}/${index}`);
+  };
+
   return (
     <MainLayout>
       <Container>
         <TabBarNews onChangeCategory={handleChangeCategory} />
         <Divider />
         <Grid container justifyContent="space-between" spacing={3}>
-          {newsList &&
-            newsList?.map((news) => (
-              <Grid item xs={12} sm={6} md={4} key={news.description}>
-                <NewsCardItem news={news} />
-              </Grid>
-            ))}
+          {isLoading
+            ? Array.from(new Array(6)).map((item, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Card>
+                    <CardMedia>
+                      <Skeleton animation="wave" variant="rect" height={140} />
+                    </CardMedia>
+                    <CardContent>
+                      <React.Fragment>
+                        <Skeleton
+                          animation="wave"
+                          height={10}
+                          style={{ marginBottom: 6 }}
+                        />
+                        <Skeleton animation="wave" height={10} width="80%" />
+                      </React.Fragment>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))
+            : newsList?.map((news, index) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  key={news.description}
+                  onClick={(e) => handleSelectNews(e, news, index)}
+                >
+                  <NewsCardItem news={news} />
+                </Grid>
+              ))}
         </Grid>
       </Container>
     </MainLayout>

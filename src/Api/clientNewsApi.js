@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const axiosClientNews = axios.create({
-  baseURL: "https://newsapi.org/v2",
+  // baseURL: "https://newsapi.org/v2",
+  baseURL: "https://article-json-server.herokuapp.com",
   headers: {
     "Content-Type": "application/json",
   },

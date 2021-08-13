@@ -11,8 +11,6 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { countNumberOfDay, transformDataMapToChart } from "Utilise/utilise";
 
-CountryDetail.propTypes = {};
-
 function CountryTitle({ countrySummary }) {
   const { updatedAt, cases, deaths, recovered, country } = countrySummary;
   const [t] = useTranslation();
@@ -82,8 +80,10 @@ function CountryDetail() {
   };
 
   const handleChangeShowTimelyLineChart = (value) => {
+    console.log({ value });
     setTimeGap(value);
   };
+
   return (
     <div>
       <MainLayout>
@@ -99,7 +99,7 @@ function CountryDetail() {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{ minHeight: "200px" }}>
               {isError && <Typography> {t("error.failLoadingData")}</Typography>}
               {countryDataTimeline && (
                 <ButtonGroup onChangeShowType={handleChangeShowTimelyLineChart} />

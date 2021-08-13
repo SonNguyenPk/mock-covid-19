@@ -27,11 +27,11 @@ function App() {
       MuiCssBaseline: {
         "@global": {
           "*": {
-            "scrollbar-width": "thin",
+            "& scrollbar-width": "none",
+            " & scrollbar-color": "white",
           },
           "*::-webkit-scrollbar": {
-            width: "4px",
-            height: "4px",
+            display: "none",
           },
         },
       },
@@ -48,12 +48,12 @@ function App() {
       <CssBaseline>
         <Switch>
           <PrivateRoute exact path={router.home} component={HomePage} />
-          <Route path={router.news} component={NewsPage} />
+          <Route exact path={router.news} component={NewsPage} />
           <PrivateRoute
             path={`${router.homeDetail}/:countryID`}
             component={CountryDetail}
           />
-          <Route path={`${router.news}/:id`} component={NewsDetail} />
+          <Route path={`${router.newsDetail}/:id`} component={NewsDetail} />
           <AuthRoute path={router.login} component={LoginPage} />
           <Route path={router.register} component={RegisterPage} />
           <Route component={PageNotFound} />
